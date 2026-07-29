@@ -17,7 +17,9 @@ on:
 jobs:
   syntax-check:
     runs-on: ubuntu-latest
-    name: Validate Dockerfiles in ${{ matrix.distros }}
+    name: "syntax: ${{ matrix.distro }}"
+
+    if: needs.syntax-check.outputs.distros != ''
 
     # Auto-discover subdirs that contain Dockerfile(s)
     outputs:
@@ -32,8 +34,8 @@ jobs:
         shell: bash
         run: |
           # Find all subdirectories containing a Dockerfile or .dockerfile
-          distros=$(find . -name 'Dockerfile' -o -name '*.dockerfile' -o -name '*.buildah' | \
-            xargs -I{} dirname {} | \
+          distros=$(find . \( -name 'Dockerfile' -o -name '*.dockerfile' -o -name '*.buildah' \) -print0 | \
+            xargs -0 -I{} dirname {} | \
             sed 's|^\./||' | \
             sort -u | \
             paste -sd ',' -)
@@ -48,7 +50,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        distro: ${{ fromJSON(format('["{0}"]', needs.syntax-check.outputs.distros))) }}
+        distro: ${{ fromJSON(format('["{0}"]', needs.syntax-check.outputs.distros)) }}
 
     name: "syntax: ${{ matrix.distro }}"
 

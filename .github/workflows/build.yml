@@ -35,8 +35,8 @@ jobs:
           if [ -n "${{ github.event.inputs.distro }}" ]; then
             echo "distros=[\"${{ github.event.inputs.distro }}\"]" >> "$GITHUB_OUTPUT"
           else
-            distros=$(find . -name 'Dockerfile' -o -name '*.dockerfile' -o -name '*.buildah' | \
-              xargs -I{} dirname {} | \
+            distros=$(find . \( -name 'Dockerfile' -o -name '*.dockerfile' -o -name '*.buildah' \) -print0 | \
+              xargs -0 -I{} dirname {} | \
               sed 's|^\./||' | \
               sort -u | \
               jq -R -s 'split("\n") | map(select(length > 0))')
@@ -47,7 +47,7 @@ jobs:
   build:
     needs: discover
     runs-on: ubuntu-latest
-    if: needs.discover.outputs.distros != '[]'
+    if: always() && needs.discover.outputs.distros != '[]'
 
     strategy:
       fail-fast: false
