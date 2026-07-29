@@ -8,18 +8,35 @@ Each distro lives in its own subdirectory and is maintained/tested independently
 
 ```
 .
-├── distros/              # Each distro gets its own subdir
-│   ├── minimal/          # e.g. core SeX with no extras
-│   ├── full/             # SeX + all built-in engines
-│   └── ...
+├── distros/
+│   ├── devtools/         # SearXNG for software developers
+│   │   ├── Dockerfile
+│   │   ├── settings.yml
+│   │   ├── limiter.toml
+│   │   └── README.md
+│   └── ...               # Other distros (academia, news, osint, ...)
 ├── .github/
 │   ├── workflows/
 │   │   ├── syntax-check.yml   # Validates Dockerfiles on PR/push
 │   │   └── build.yml          # Builds OCI images on tags
-│   └── dependabot.yml         # Grouped dependency updates
+│   ├── actions/
+│   │   └── install-buildah/   # Composite action for buildah/podman
+│   ├── dependabot.yml         # Grouped dependency updates
+│   └── actionlint.yaml        # actionlint suppressions
 └── scripts/
     └── regenerate-dependabot.sh  # Sync dependabot config with subdirs
 ```
+
+## Available distros
+
+| Distro | Focus |
+|--------|-------|
+| [`devtools`](distros/devtools/) | Stack Overflow, GitHub, docs, package registries |
+| `academia` | Scholar, arXiv, PubMed, DOI |
+| `news` | News sources, fact-checking, multilingual |
+| `archiver` | Web archive, Wayback Machine |
+| `purpleteam` | Security advisories, CVE, NVD |
+| `osint` | Public data correlation, Shodan, Censys |
 
 ## Adding a new distro
 

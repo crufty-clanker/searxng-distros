@@ -1,0 +1,65 @@
+# Devtools distro — SearXNG configured for software developers
+#
+# Focus: Stack Overflow, GitHub, GitLab, documentation sites, package registries
+# Disabled: shopping, images, videos, social media, general news
+
+use_default_settings: true
+
+general:
+  debug: false
+  instance_name: "Devtools Search"
+  privacymode: false
+
+search:
+  safe_search: 0
+  autocomplete: "google"
+  default_lang: "en"
+
+server:
+  port: 8080
+  bind_address: "0.0.0.0"
+  secret_key: "change-me-in-production"
+  limiter: true
+  image_proxy: false
+
+# Enable developer-focused engines
+enabled_engines:
+  - stackoverflow
+  - github
+  - gitlab
+  - docs
+  - pypi
+  - npm
+  - crates
+  - cargo
+  - google
+  - google_scholar
+  - duckduckgo
+  - bing
+  - wikipedia
+
+# Disabled engines (not relevant for dev workflow)
+disabled_engines:
+  - shopping
+  - images
+  - videos
+  - music
+  - news
+  - files
+  - ito
+  - reddit
+  - youtube
+  - twitter
+  - instagram
+  - tiktok
+
+ui:
+  default_theme: simple
+  default_locale: "en"
+  infoboxes: true
+  syntax_highlighting: true
+
+# Rate limits for development use (generous)
+limiter:
+  enabled: true
+  realtime: true
