@@ -1,0 +1,15 @@
+# actionlint configuration
+# See: https://github.com/rhysd/actionlint/blob/main/docs/config.md
+
+self-hosted-runner:
+  labels: []
+
+config-variables: null
+
+paths:
+  .github/workflows/**/*.yml:
+    ignore:
+      # Known false-positives: actionlint cannot follow fromJSON() / format()
+      # through dynamic expressions, nor track cross-job output references.
+      - 'property "[^"]+" is not defined'
+      - 'parser did not reach end of input'

@@ -1,0 +1,22 @@
+# Build artifacts
+*.tar
+*.tar.gz
+*.oci
+
+# Buildah/podman cache
+/buildah/
+/podman/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Logs
+*.log
