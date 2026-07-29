@@ -1,0 +1,36 @@
+# Dependabot configuration for searxng-distros
+#
+# Each distro subdir gets its own entry so updates are grouped per distro.
+# To add a new distro, copy the pattern below and adjust `directory`.
+#
+# Example:
+#   - package-ecosystem: "docker"
+#     directory: "/distros/my-new-distro"
+#     schedule: { interval: "weekly" }
+#     groups: { my-new-distro: { patterns: ["*"] } }
+
+version: 2
+updates:
+
+  # ── GitHub Actions (root) ──────────────────────────────────────────
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  # ── Distro subdirs ─────────────────────────────────────────────────
+  # Add one block per distro. Dependabot will open one PR per group.
+  #
+  # - package-ecosystem: "docker"
+  #   directory: "/distros/example"
+  #   schedule: { interval: "weekly" }
+  #   groups:
+  #     example-distro:
+  #       patterns: ["*"]
+  #
+  # The "docker" ecosystem tracks base image tags referenced in
+  # FROM lines (e.g. "ubuntu:22.04" → "ubuntu:24.04").

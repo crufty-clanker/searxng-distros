@@ -1,0 +1,72 @@
+name: Syntax Check
+
+on:
+  pull_request:
+    paths:
+      - '**/Dockerfile'
+      - '**/*.dockerfile'
+      - '**/*.buildah'
+      - '.github/workflows/syntax-check.yml'
+  push:
+    branches: [main]
+    paths:
+      - '**/Dockerfile'
+      - '**/*.dockerfile'
+      - '**/*.buildah'
+
+jobs:
+  syntax-check:
+    runs-on: ubuntu-latest
+    name: Validate Dockerfiles in ${{ matrix.distros }}
+
+    # Auto-discover subdirs that contain Dockerfile(s)
+    outputs:
+      distros: ${{ steps.discover.outputs.distros }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Discover distro subdirs
+        id: discover
+        shell: bash
+        run: |
+          # Find all subdirectories containing a Dockerfile or .dockerfile
+          distros=$(find . -name 'Dockerfile' -o -name '*.dockerfile' -o -name '*.buildah' | \
+            xargs -I{} dirname {} | \
+            sed 's|^\./||' | \
+            sort -u | \
+            paste -sd ',' -)
+          echo "distros=$distros" >> "$GITHUB_OUTPUT"
+          echo "Found: $distros"
+
+  validate:
+    needs: syntax-check
+    runs-on: ubuntu-latest
+    if: needs.syntax-check.outputs.distros != ''
+
+    strategy:
+      fail-fast: false
+      matrix:
+        distro: ${{ fromJSON(format('["{0}"]', needs.syntax-check.outputs.distros))) }}
+
+    name: "syntax: ${{ matrix.distro }}"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Buildah
+        uses: ./.github/actions/install-buildah
+
+      - name: Run syntax check
+        run: |
+          # buildah bud with --quiet catches syntax errors fast
+          # --layers=false skips layer caching, --squash-all avoids final commit
+          # --isolation chroot avoids rootless issues on runners
+          buildah bud \
+            --isolation chroot \
+            --quiet \
+            --layers=false \
+            -f "${{ matrix.distro }}/Dockerfile" \
+            "${{ matrix.distro }}"

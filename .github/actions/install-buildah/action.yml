@@ -1,0 +1,21 @@
+name: Install Buildah
+description: Install buildah and podman for OCI container operations
+runs:
+  using: composite
+  steps:
+    - name: Install buildah dependencies
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends \
+          buildah \
+          podman \
+          fuse-overlayfs
+
+    - name: Verify buildah
+      shell: bash
+      run: buildah --version
+
+    - name: Verify podman
+      shell: bash
+      run: podman --version
