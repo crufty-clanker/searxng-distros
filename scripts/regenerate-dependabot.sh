@@ -8,10 +8,13 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 DEP_FILE="$REPO_ROOT/.github/dependabot.yml"
 
 # Find every directory that contains a Dockerfile (any variant name)
-DISTROS=$(find . -mindepth 2 -name 'Dockerfile' -o -name '*.dockerfile' -o -name '*.buildah' \
-  | xargs -I{} dirname {} \
-  | sed 's|^\./||' \
-  | sort -u)
+DISTROS=()
+mapfile -t DISTROS < <(
+  find . -mindepth 2 \( -name 'Dockerfile' -o -name '*.dockerfile' -o -name '*.buildah' \) -print0 | \
+    xargs -0 -I{} dirname {} | \
+    sed 's|^\./||' | \
+    sort -u
+)
 
 {
   cat <<'HEADER'
@@ -33,7 +36,7 @@ updates:
   # ── Distro subdirs ─────────────────────────────────────────────────
 HEADER
 
-  for dir in $DISTROS; do
+  for dir in ${DISTROS[@]+"${DISTROS[@]}"}; do
     # Use the dirname as the group name (replace / with -)
     group_name="${dir//\//-}"
     cat <<ENTRY
@@ -50,4 +53,9 @@ ENTRY
 
 } > "$DEP_FILE"
 
-echo "Regenerated $DEP_FILE — ${#DISTROS[@]} distro(s) discovered."
+count=${#DISTROS[@]}
+if [ "$count" -gt 0 ]; then
+  echo "Regenerated $DEP_FILE — $count distro(s) discovered: ${DISTROS[*]}"
+else
+  echo "Regenerated $DEP_FILE — no distros found (add Dockerfiles to subdirs)"
+fi
