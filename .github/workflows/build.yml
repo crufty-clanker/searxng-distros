@@ -35,7 +35,7 @@ jobs:
           if [ -n "${{ github.event.inputs.distro }}" ]; then
             echo "distros=[\"${{ github.event.inputs.distro }}\"]" >> "$GITHUB_OUTPUT"
           else
-            distros=$(find . \( -name 'Dockerfile' -o -name '*.dockerfile' -o -name '*.buildah' \) -print0 | \
+            distros=$(find . \( -name 'Containerfile' -o -name '*.buildah' \) -print0 | \
               xargs -0 -I{} dirname {} | \
               sed 's|^\./||' | \
               sort -u | \
@@ -75,7 +75,7 @@ jobs:
             --format oci \
             --isolation chroot \
             --tag "oci-archive:/tmp/${IMAGE_NAME}.tar" \
-            -f "${{ matrix.distro }}/Dockerfile" \
+            -f "${{ matrix.distro }}/Containerfile" \
             "${{ matrix.distro }}"
 
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"

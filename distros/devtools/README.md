@@ -22,7 +22,7 @@ Shopping, images, videos, music, news, files, social media (Reddit, Twitter, Ins
 ## Building
 
 ```bash
-buildah bud -f distros/devtools/Dockerfile -t devtools distros/devtools/
+buildah bud -f distros/devtools/Containerfile -t devtools distros/devtools/
 ```
 
 ## Running

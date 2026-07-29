@@ -7,10 +7,10 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 DEP_FILE="$REPO_ROOT/.github/dependabot.yml"
 
-# Find every directory that contains a Dockerfile (any variant name)
+# Find every directory that contains a Containerfile or .buildah file
 DISTROS=()
 mapfile -t DISTROS < <(
-  find . -mindepth 2 \( -name 'Dockerfile' -o -name '*.dockerfile' -o -name '*.buildah' \) -print0 | \
+  find . -mindepth 2 \( -name 'Containerfile' -o -name '*.buildah' \) -print0 | \
     xargs -0 -I{} dirname {} | \
     sed 's|^\./||' | \
     sort -u
@@ -57,5 +57,5 @@ count=${#DISTROS[@]}
 if [ "$count" -gt 0 ]; then
   echo "Regenerated $DEP_FILE — $count distro(s) discovered: ${DISTROS[*]}"
 else
-  echo "Regenerated $DEP_FILE — no distros found (add Dockerfiles to subdirs)"
+  echo "Regenerated $DEP_FILE — no distros found (add Containerfiles to subdirs)"
 fi

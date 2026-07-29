@@ -3,15 +3,13 @@ name: Syntax Check
 on:
   pull_request:
     paths:
-      - '**/Dockerfile'
-      - '**/*.dockerfile'
+      - '**/Containerfile'
       - '**/*.buildah'
       - '.github/workflows/syntax-check.yml'
   push:
     branches: [main]
     paths:
-      - '**/Dockerfile'
-      - '**/*.dockerfile'
+      - '**/Containerfile'
       - '**/*.buildah'
 
 jobs:
@@ -21,7 +19,7 @@ jobs:
 
     if: needs.syntax-check.outputs.distros != ''
 
-    # Auto-discover subdirs that contain Dockerfile(s)
+    # Auto-discover subdirs that contain Containerfile(s)
     outputs:
       distros: ${{ steps.discover.outputs.distros }}
 
@@ -33,8 +31,8 @@ jobs:
         id: discover
         shell: bash
         run: |
-          # Find all subdirectories containing a Dockerfile or .dockerfile
-          distros=$(find . \( -name 'Dockerfile' -o -name '*.dockerfile' -o -name '*.buildah' \) -print0 | \
+          # Find all subdirectories containing a Containerfile or .buildah
+          distros=$(find . \( -name 'Containerfile' -o -name '*.buildah' \) -print0 | \
             xargs -0 -I{} dirname {} | \
             sed 's|^\./||' | \
             sort -u | \
@@ -70,5 +68,5 @@ jobs:
             --isolation chroot \
             --quiet \
             --layers=false \
-            -f "${{ matrix.distro }}/Dockerfile" \
+            -f "${{ matrix.distro }}/Containerfile" \
             "${{ matrix.distro }}"
