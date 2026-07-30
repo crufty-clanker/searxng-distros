@@ -28,7 +28,7 @@ jobs:
         id: discover
         shell: bash
         run: |
-          distros=$(find . -name 'Containerfile' -print0 | \
+          distros=$(find . \( -name 'Containerfile' -o -name '*.buildah' \) -print0 | \
             xargs -0 -I{} dirname {} | \
             sed 's|^\./||' | \
             sort -u | \
@@ -44,7 +44,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        distro: ${{ fromJSON(format('["{0}"]', needs.discover.outputs.distros))) }}
+        distro: ${{ fromJSON(format('["{0}"]', needs.discover.outputs.distros)) }}
 
     name: "test: ${{ matrix.distro }}"
 
