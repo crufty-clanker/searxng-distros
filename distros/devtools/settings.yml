@@ -12,7 +12,8 @@ general:
 
 search:
   safe_search: 0
-  autocomplete: "google"
+  autocomplete: "duckduckgo"
+  autocomplete_min: 3
   default_lang: "en"
 
 server:
@@ -59,7 +60,4 @@ ui:
   infoboxes: true
   syntax_highlighting: true
 
-# Rate limits for development use (generous)
-limiter:
-  enabled: true
-  realtime: true
+# Limiter config is in limiter.toml — no need to duplicate here
