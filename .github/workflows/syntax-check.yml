@@ -31,12 +31,7 @@ jobs:
         id: discover
         shell: bash
         run: |
-          # Find all subdirectories containing a Containerfile or .buildah
-          distros=$(find . \( -name 'Containerfile' -o -name '*.buildah' \) -print0 | \
-            xargs -0 -I{} dirname {} | \
-            sed 's|^\./||' | \
-            sort -u | \
-            paste -sd ',' -)
+          distros=$(find ./distros -maxdepth 1 -mindepth 1 | xargs basename)
           echo "distros=$distros" >> "$GITHUB_OUTPUT"
           echo "Found: $distros"
 
