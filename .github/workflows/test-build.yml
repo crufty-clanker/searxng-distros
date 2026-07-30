@@ -28,7 +28,10 @@ jobs:
         id: discover
         shell: bash
         run: |
-          distros=$(find ./distros -maxdepth 1 -mindepth 1 | xargs basename)
+          distros=$(find ./distros -maxdepth 1 -mindepth 1 -print0 | \
+            xargs -0 -I{} basename {} | \
+            sort | \
+            paste -sd ',' -)
           echo "distros=$distros" >> "$GITHUB_OUTPUT"
           echo "Distros: $distros"
 
