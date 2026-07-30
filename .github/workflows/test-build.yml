@@ -28,10 +28,9 @@ jobs:
         id: discover
         shell: bash
         run: |
-          distros=$(find . \( -name 'Containerfile' -o -name '*.buildah' \) -print0 | \
-            xargs -0 -I{} dirname {} | \
-            sed 's|^\./||' | \
-            sort -u | \
+          distros=$(find distros -mindepth 1 -maxdepth 1 -type d -print0 | \
+            xargs -0 -I{} basename {} | \
+            sort | \
             paste -sd ',' -)
           echo "distros=$distros" >> "$GITHUB_OUTPUT"
           echo "Distros: $distros"
