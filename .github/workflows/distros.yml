@@ -158,10 +158,24 @@ jobs:
           CONTAINER=$(buildah from "oci-archive:/tmp/${{ matrix.distro }}.tar")
           buildah run --isolation chroot "$CONTAINER" \
             sh -c "python -m searx.webapp &"
-          sleep 5
-          curl --retry 5 --retry-delay 2 --retry-connrefused \
-            --fail-with-body \
-            http://localhost:8080/health
+          # Wait for server to be ready with proper status code check
+          for i in $(seq 1 30); do
+            HTTP_STATUS=$(curl --silent --write-out '%{http_code}' --output /dev/null \
+              http://localhost:8080/health 2>/dev/null) || true
+            if [ "$HTTP_STATUS" = "200" ]; then
+              echo "Health check passed (HTTP $HTTP_STATUS)"
+              break
+            fi
+            echo "Attempt $i: HTTP $HTTP_STATUS — retrying in 2s..."
+            sleep 2
+          done
+          # Final validation: ensure we got a 200
+          FINAL_STATUS=$(curl --silent --write-out '%{http_code}' --output /dev/null \
+            http://localhost:8080/health)
+          if [ "$FINAL_STATUS" != "200" ]; then
+            echo "ERROR: Health check failed with HTTP $FINAL_STATUS"
+            exit 1
+          fi
           buildah rm "$CONTAINER"
 
       - name: Cleanup

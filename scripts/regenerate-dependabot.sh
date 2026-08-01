@@ -37,6 +37,11 @@ updates:
 HEADER
 
   for dir in ${DISTROS[@]+"${DISTROS[@]}"}; do
+    # Validate directory name (alphanumeric, hyphens, underscores, slashes)
+    if [[ ! "$dir" =~ ^[a-zA-Z0-9/_-]+$ ]]; then
+      echo "Warning: skipping invalid directory name: $dir" >&2
+      continue
+    fi
     # Use the dirname as the group name (replace / with -)
     group_name="${dir//\//-}"
     cat <<ENTRY
