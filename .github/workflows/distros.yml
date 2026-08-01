@@ -122,7 +122,9 @@ jobs:
         run: rm -f /tmp/${{ matrix.distro }}.tar
 
   test:
-    needs: discover
+    needs:
+      discover
+      build
     if: github.event.inputs.step == 'test' || github.event.inputs.step == 'all' || !github.event.inputs.step
     runs-on: ubuntu-latest
     strategy:
@@ -136,21 +138,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Build image
-        id: build
-        uses: redhat-actions/buildah-build@v3
+      - name: Download image
+        uses: actions/download-artifact@v4
         with:
-          image: "${{ matrix.distro }}"
-          tags: "oci-${{ matrix.distro }}"
-          oci: true
-          context: "${{ github.workspace }}/distros/${{ matrix.distro }}"
-          containerfiles: |
-            Containerfile
-          buildah-image: quay.io/buildah/stable
-
-      - name: Export to OCI archive
-        run: |
-          buildah push "${{ steps.build.outputs.image }}:oci-${{ matrix.distro }}" "oci-archive:/tmp/${{ matrix.distro }}.tar"
+          name: "${{ matrix.distro }}-image"
+          path: /tmp/
 
       - name: Test container health
         run: |
