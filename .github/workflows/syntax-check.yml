@@ -30,7 +30,7 @@ jobs:
           distros=$(find ./distros -maxdepth 1 -mindepth 1 -print0 | \
             xargs -0 -I{} basename {} | \
             sort | \
-            paste -sd ',' -)
+            jq -R -s 'split("\n") | map(select(length > 0))')
           echo "distros=$distros" >> "$GITHUB_OUTPUT"
           echo "Found: $distros"
 
@@ -42,7 +42,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        distro: ${{ fromJSON(format('["{0}"]', needs.discover.outputs.distros)) }}
+        distro: ${{ fromJSON(needs.discover.outputs.distros) }}
 
     name: "syntax: ${{ matrix.distro }}"
 
