@@ -1,0 +1,62 @@
+# News distro — SearXNG configured for news and fact-checking
+#
+# Focus: News sources, fact-checking, multilingual support
+# Disabled: shopping, images, videos, social media, developer platforms
+
+use_default_settings: true
+
+general:
+  debug: false
+  instance_name: "News Search"
+  privacymode: false
+
+search:
+  safe_search: 0
+  autocomplete: "duckduckgo"
+  autocomplete_min: 3
+  default_lang: "en"
+
+server:
+  port: 8080
+  bind_address: "0.0.0.0"
+  secret_key: "change-me-in-production"
+  limiter: true
+  image_proxy: false
+
+# Enable news-focused engines
+enabled_engines:
+  - google_news
+  - bing_news
+  - duckduckgo
+  - google
+  - bing
+  - wikipedia
+  - wikidata
+  - finnish_news
+  - ledectome
+
+# Disabled engines (not relevant for news workflow)
+disabled_engines:
+  - shopping
+  - images
+  - videos
+  - music
+  - files
+  - ito
+  - reddit
+  - youtube
+  - twitter
+  - instagram
+  - tiktok
+  - stackoverflow
+  - github
+  - gitlab
+  - arxiv
+  - pubmed
+  - doi
+
+ui:
+  default_theme: simple
+  default_locale: "en"
+  infoboxes: true
+  syntax_highlighting: false

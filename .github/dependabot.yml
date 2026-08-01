@@ -30,3 +30,11 @@ updates:
     groups:
       distros-devtools-distro:
         patterns: ["*"]
+
+  - package-ecosystem: "docker"
+    directory: "/distros/news"
+    schedule:
+      interval: "weekly"
+    groups:
+      distros-news-distro:
+        patterns: ["*"]
