@@ -44,7 +44,11 @@ jobs:
             xargs -0 -I{} basename {} | \
             sort | \
             jq -R -s 'split("\n") | map(select(length > 0))')
-          echo "distros=$distros" >> "$GITHUB_OUTPUT"
+          {
+            echo "distros<<EOF"
+            echo "$distros"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
           echo "Found: $distros"
 
   syntax:
