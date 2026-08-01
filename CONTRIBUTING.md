@@ -72,6 +72,16 @@ buildah rm "$CONTAINER"
 - **Containerfile**: One instruction per line, group related RUN commands
 - **Shell**: Use `set -euo pipefail`, quote variables
 
+## Dependabot Sync
+
+After adding a new distro, run:
+
+```bash
+./scripts/regenerate-dependabot.sh
+```
+
+The `dependabot-sync-check` workflow also runs automatically on PRs that modify distros and will open a PR if `dependabot.yml` is out of sync.
+
 ## Commit Messages
 
 Follow [Conventional Commits](https://www.conventionalcommits.org/):

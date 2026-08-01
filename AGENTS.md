@@ -63,6 +63,7 @@ scripts/
 
 - **distros**: Runs on PR/push/manual. Three steps: syntax → build → test.
   - Use `workflow_dispatch` with `step` input to run specific step.
+- **dependabot-sync**: Runs on PR (distro changes), daily, or manual. Ensures `dependabot.yml` stays in sync with `distros/`.
 - **dependabot**: Groups updates per distro subdir + GitHub Actions.
 
 ## Linting

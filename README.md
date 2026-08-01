@@ -44,9 +44,10 @@ Each distro lives in its own subdirectory and is maintained/tested independently
 
 ## CI workflows
 
-| Workflow  | Trigger                          | What it does                                  |
-|-----------|----------------------------------|-----------------------------------------------|
-| `distros` | PR, push, or manual              | Three steps: syntax → build → test            |
+| Workflow           | Trigger                          | What it does                                  |
+|--------------------|----------------------------------|-----------------------------------------------|
+| `distros`          | PR, push, or manual              | Three steps: syntax → build → test            |
+| `dependabot-sync`  | PR (distro changes), daily, or manual | Checks `dependabot.yml` is in sync with `distros/`, opens PR if not |
 
 ## Building locally
 
