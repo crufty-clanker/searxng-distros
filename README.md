@@ -28,12 +28,12 @@ Each distro lives in its own subdirectory and is maintained/tested independently
 
 | Distro | Focus |
 |--------|-------|
-| [`devtools`](distros/devtools/) | Stack Overflow, GitHub, docs, package registries |
-| `academia` | Scholar, arXiv, PubMed, DOI |
-| `news` | News sources, fact-checking, multilingual |
-| `archiver` | Web archive, Wayback Machine |
-| `purpleteam` | Security advisories, CVE, NVD |
-| `osint` | Public data correlation, Shodan, Censys |
+| [`devtools`](distros/devtools/) | Stack Exchange, GitHub, GitLab, PyPI, npm, crates |
+| `academia` | Google Scholar, arXiv, PubMed, Crossref, OpenAlex |
+| `news` | Google News, Bing News, Reuters, Tagesschau |
+| `archiver` | Anna's Archive, Z-Library, Open Library |
+| `purpleteam` | NVD, GitHub Code, Hacker News, PrivacyWall |
+| `osint` | Google Images, Flickr, Unsplash, OpenStreetMap |
 
 ## Adding a new distro
 
@@ -48,6 +48,51 @@ Each distro lives in its own subdirectory and is maintained/tested independently
 |--------------------|----------------------------------|-----------------------------------------------|
 | `distros`          | PR, push, or manual              | Three steps: syntax → build → test            |
 | `dependabot-sync`  | PR (distro changes), daily, or manual | Checks `dependabot.yml` is in sync with `distros/`, opens PR if not |
+| `engine-validation` | Manual or on PR                  | Validates all engines in settings.yml are real SearXNG engines |
+
+## Engine Validation
+
+Before committing changes to `settings.yml`, validate that all engines in `enabled_engines` and `disabled_engines` are real SearXNG engines using this Python script:
+
+```bash
+python3 << 'EOF'
+import json
+import urllib.request
+from pathlib import Path
+
+url = 'https://api.github.com/repos/searxng/searxng/contents/searx/engines'
+req = urllib.request.Request(url, headers={'User-Agent': 'Python'})
+with urllib.request.urlopen(req) as response:
+    data = json.loads(response.read())
+    real_engines = sorted([item['name'].replace('.py', '') for item in data])
+
+for settings_file in Path('distros').glob('*/settings.yml'):
+    with open(settings_file) as f:
+        content = f.read()
+    in_section = None
+    section = []
+    for line in content.split('\n'):
+        if line.strip() == 'enabled_engines:':
+            in_section = 'enabled'
+            section = []
+        elif line.strip() == 'disabled_engines:':
+            in_section = 'disabled'
+            section = []
+        elif in_section and line.startswith('  - '):
+            engine = line.strip().replace('- ', '').strip()
+            section.append(engine)
+        elif in_section and not line.startswith('  - ') and not line.startswith('  #'):
+            if in_section == 'enabled':
+                invalid = [e for e in section if e not in real_engines]
+                status = '❌' if invalid else '✅'
+                print(f'{status} {settings_file}: {"Invalid: " + str(invalid) if invalid else "All valid"}')
+            elif in_section == 'disabled':
+                invalid = [e for e in section if e not in real_engines]
+                status = '❌' if invalid else '✅'
+                print(f'{status} {settings_file}: {"Invalid: " + str(invalid) if invalid else "All valid"}')
+            in_section = None
+EOF
+```
 
 ## Building locally
 
