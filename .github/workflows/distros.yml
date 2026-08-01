@@ -62,17 +62,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Install Buildah
-        uses: ./.github/actions/install-buildah
-
       - name: Syntax check
-        run: |
-          buildah bud \
-            --isolation chroot \
-            --quiet \
-            --layers=false \
-            -f "${{ matrix.distro }}/Containerfile" \
-            "${{ matrix.distro }}"
+        uses: redhat-actions/buildah-build@v3
+        with:
+          image: "syntax-${{ matrix.distro }}"
+          tags: latest
+          containerfiles: |
+            ${{ matrix.distro }}/Containerfile
+          buildah-image: quay.io/buildah/stable
+          extra-args: |
+            --quiet
+            --layers=false
 
   build:
     needs: discover
@@ -89,17 +89,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Install Buildah
-        uses: ./.github/actions/install-buildah
+      - name: Build image
+        id: build
+        uses: redhat-actions/buildah-build@v3
+        with:
+          image: "${{ matrix.distro }}"
+          tags: "oci-${{ matrix.distro }}"
+          oci: true
+          containerfiles: |
+            ${{ matrix.distro }}/Containerfile
+          buildah-image: quay.io/buildah/stable
 
-      - name: Build OCI image
+      - name: Export to OCI archive
         run: |
-          buildah bud \
-            --format oci \
-            --isolation chroot \
-            --tag "oci-archive:/tmp/${{ matrix.distro }}.tar" \
-            -f "${{ matrix.distro }}/Containerfile" \
-            "${{ matrix.distro }}"
+          buildah push "${{ steps.build.outputs.image }}:oci-${{ matrix.distro }}" "oci-archive:/tmp/${{ matrix.distro }}.tar"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -127,18 +130,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Install Buildah
-        uses: ./.github/actions/install-buildah
-
-      - name: Build OCI image
+      - name: Build image
         id: build
+        uses: redhat-actions/buildah-build@v3
+        with:
+          image: "${{ matrix.distro }}"
+          tags: "oci-${{ matrix.distro }}"
+          oci: true
+          containerfiles: |
+            ${{ matrix.distro }}/Containerfile
+          buildah-image: quay.io/buildah/stable
+
+      - name: Export to OCI archive
         run: |
-          buildah bud \
-            --format oci \
-            --isolation chroot \
-            --tag "oci-archive:/tmp/${{ matrix.distro }}.tar" \
-            -f "${{ matrix.distro }}/Containerfile" \
-            "${{ matrix.distro }}"
+          buildah push "${{ steps.build.outputs.image }}:oci-${{ matrix.distro }}" "oci-archive:/tmp/${{ matrix.distro }}.tar"
 
       - name: Test container health
         run: |
