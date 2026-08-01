@@ -72,7 +72,7 @@ jobs:
           image: "syntax-${{ matrix.distro }}"
           tags: latest
           containerfiles: |
-            ${{ matrix.distro }}/Containerfile
+            distros/${{ matrix.distro }}/Containerfile
           buildah-image: quay.io/buildah/stable
           extra-args: |
             --quiet
@@ -101,7 +101,7 @@ jobs:
           tags: "oci-${{ matrix.distro }}"
           oci: true
           containerfiles: |
-            ${{ matrix.distro }}/Containerfile
+            distros/${{ matrix.distro }}/Containerfile
           buildah-image: quay.io/buildah/stable
 
       - name: Export to OCI archive
@@ -142,7 +142,7 @@ jobs:
           tags: "oci-${{ matrix.distro }}"
           oci: true
           containerfiles: |
-            ${{ matrix.distro }}/Containerfile
+            distros/${{ matrix.distro }}/Containerfile
           buildah-image: quay.io/buildah/stable
 
       - name: Export to OCI archive
