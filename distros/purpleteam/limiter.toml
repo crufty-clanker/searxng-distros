@@ -1,0 +1,29 @@
+# Rate limiter configuration for Purpleteam distro
+# Moderate limits for security research
+
+[botdetection.ip_limit]
+link_token = true
+
+[botdetection.ip_limit.list_ips]
+# No IP whitelisting by default
+
+[botdetection.ip_limit.query_limit]
+# 20 queries per 5 minutes per IP
+per_minute = 20
+
+[botdetection.ip_limit.query_limit_in_between]
+# 10 queries per minute per IP
+per_minute = 10
+
+[botdetection.ip_limit.use_recaptcha]
+# Enable reCAPTCHA for suspicious IPs
+enabled = false
+
+[botdetection.ip_limit.reaptcha_path]
+# reCAPTCHA path (not used unless enabled)
+path = ""
+
+[botdetection.ip_limit.secret]
+# Secret key for rate limiting (change in production)
+key = "change-me-in-production"
+sign_key = "change-me-in-production"

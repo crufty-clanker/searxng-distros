@@ -1,0 +1,78 @@
+# OSINT distro — SearXNG configured for open-source intelligence
+#
+# Focus: Public data correlation, Shodan, Censys, geolocation
+# Disabled: shopping, videos, music, social media, developer platforms
+
+use_default_settings: true
+
+general:
+  debug: false
+  instance_name: "OSINT Search"
+  privacymode: false
+
+search:
+  safe_search: 0
+  autocomplete: "duckduckgo"
+  autocomplete_min: 3
+  default_lang: "en"
+
+server:
+  port: 8080
+  bind_address: "0.0.0.0"
+  secret_key: "change-me-in-production"
+  limiter: true
+  image_proxy: false
+
+# Enable OSINT-focused engines
+enabled_engines:
+  - google
+  - google_images
+  - duckduckgo
+  - bing
+  - wikipedia
+  - wikidata
+  - openstreetmap
+  - wikicommons
+  - giphy
+  - unsplash
+  - pexels
+  - flickr
+  - flickr_noapi
+  - deviantart
+  - pixiv
+  - instagram
+  - twitter
+  - youtube_api
+  - vimeo
+  - reuters
+  - tagesschau
+
+# Disabled engines (not relevant for OSINT workflow)
+disabled_engines:
+  - bing_images
+  - bing_videos
+  - google_videos
+  - google_news
+  - bing_news
+  - youtube_noapi
+  - soundcloud
+  - spotify
+  - dailymotion
+  - piped
+  - odysee
+  - rumble
+  - 9gag
+  - imgur
+  - stackexchange
+  - github
+  - gitlab
+  - arxiv
+  - pubmed
+  - crossref
+  - openalex
+
+ui:
+  default_theme: simple
+  default_locale: "en"
+  infoboxes: true
+  syntax_highlighting: false

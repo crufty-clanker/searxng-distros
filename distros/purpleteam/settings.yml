@@ -1,0 +1,75 @@
+# Purpleteam distro — SearXNG configured for security operations
+#
+# Focus: Security advisories, CVE, NVD, threat intelligence
+# Disabled: shopping, images, videos, music, social media, developer platforms
+
+use_default_settings: true
+
+general:
+  debug: false
+  instance_name: "Purple Team Search"
+  privacymode: false
+
+search:
+  safe_search: 0
+  autocomplete: "duckduckgo"
+  autocomplete_min: 3
+  default_lang: "en"
+
+server:
+  port: 8080
+  bind_address: "0.0.0.0"
+  secret_key: "change-me-in-production"
+  limiter: true
+  image_proxy: false
+
+# Enable security-focused engines
+enabled_engines:
+  - google
+  - duckduckgo
+  - bing
+  - wikipedia
+  - wikidata
+  - nvd
+  - github_code
+  - hackernews
+  - privacywall
+  - sourcehut
+  - gitea
+  - reuters
+  - tagesschau
+
+# Disabled engines (not relevant for security workflow)
+disabled_engines:
+  - bing_images
+  - bing_videos
+  - google_images
+  - google_videos
+  - google_news
+  - bing_news
+  - youtube_noapi
+  - youtube_api
+  - soundcloud
+  - spotify
+  - vimeo
+  - dailymotion
+  - piped
+  - odysee
+  - rumble
+  - 9gag
+  - imgur
+  - deviantart
+  - pixiv
+  - stackexchange
+  - github
+  - gitlab
+  - arxiv
+  - pubmed
+  - crossref
+  - openalex
+
+ui:
+  default_theme: simple
+  default_locale: "en"
+  infoboxes: true
+  syntax_highlighting: true
