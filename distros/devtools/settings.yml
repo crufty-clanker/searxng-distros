@@ -25,14 +25,12 @@ server:
 
 # Enable developer-focused engines
 enabled_engines:
-  - stackoverflow
+  - stackexchange
   - github
   - gitlab
-  - docs
   - pypi
   - npm
   - crates
-  - cargo
   - google
   - google_scholar
   - duckduckgo
@@ -41,18 +39,25 @@ enabled_engines:
 
 # Disabled engines (not relevant for dev workflow)
 disabled_engines:
-  - shopping
-  - images
-  - videos
-  - music
-  - news
-  - files
-  - ito
-  - reddit
-  - youtube
-  - twitter
-  - instagram
-  - tiktok
+  - bing_images
+  - bing_videos
+  - google_images
+  - google_videos
+  - google_news
+  - bing_news
+  - youtube_noapi
+  - youtube_api
+  - soundcloud
+  - spotify
+  - vimeo
+  - dailymotion
+  - piped
+  - odysee
+  - rumble
+  - 9gag
+  - imgur
+  - deviantart
+  - pixiv
 
 ui:
   default_theme: simple

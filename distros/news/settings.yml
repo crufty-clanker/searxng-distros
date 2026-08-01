@@ -27,33 +27,38 @@ server:
 enabled_engines:
   - google_news
   - bing_news
+  - reuters
+  - tagesschau
+  - ansa
   - duckduckgo
   - google
   - bing
   - wikipedia
   - wikidata
-  - finnish_news
-  - ledectome
 
 # Disabled engines (not relevant for news workflow)
 disabled_engines:
-  - shopping
-  - images
-  - videos
-  - music
-  - files
-  - ito
-  - reddit
-  - youtube
-  - twitter
-  - instagram
-  - tiktok
-  - stackoverflow
-  - github
-  - gitlab
+  - bing_images
+  - bing_videos
+  - google_images
+  - google_videos
+  - youtube_noapi
+  - youtube_api
+  - soundcloud
+  - spotify
+  - vimeo
+  - dailymotion
+  - piped
+  - odysee
+  - rumble
+  - 9gag
+  - imgur
+  - deviantart
+  - pixiv
   - arxiv
   - pubmed
-  - doi
+  - crossref
+  - openalex
 
 ui:
   default_theme: simple

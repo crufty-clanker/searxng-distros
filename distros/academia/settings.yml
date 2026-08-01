@@ -28,30 +28,37 @@ enabled_engines:
   - google_scholar
   - arxiv
   - pubmed
-  - doi
   - crossref
-  - unpaywall
   - openalex
+  - semantic_scholar
   - google
   - duckduckgo
   - bing
   - wikipedia
+  - wikidata
 
 # Disabled engines (not relevant for academic workflow)
 disabled_engines:
-  - shopping
-  - images
-  - videos
-  - music
-  - news
-  - files
-  - ito
-  - reddit
-  - youtube
-  - twitter
-  - instagram
-  - tiktok
-  - stackoverflow
+  - bing_images
+  - bing_videos
+  - google_images
+  - google_videos
+  - google_news
+  - bing_news
+  - youtube_noapi
+  - youtube_api
+  - soundcloud
+  - spotify
+  - vimeo
+  - dailymotion
+  - piped
+  - odysee
+  - rumble
+  - 9gag
+  - imgur
+  - deviantart
+  - pixiv
+  - stackexchange
   - github
   - gitlab
 
