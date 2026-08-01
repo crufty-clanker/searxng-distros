@@ -1,0 +1,62 @@
+# Academia distro — SearXNG configured for academic research
+#
+# Focus: Scholar, arXiv, PubMed, DOI, academic journals
+# Disabled: shopping, images, videos, social media, general news
+
+use_default_settings: true
+
+general:
+  debug: false
+  instance_name: "Academia Search"
+  privacymode: false
+
+search:
+  safe_search: 0
+  autocomplete: "duckduckgo"
+  autocomplete_min: 3
+  default_lang: "en"
+
+server:
+  port: 8080
+  bind_address: "0.0.0.0"
+  secret_key: "change-me-in-production"
+  limiter: true
+  image_proxy: false
+
+# Enable academic-focused engines
+enabled_engines:
+  - google_scholar
+  - arxiv
+  - pubmed
+  - doi
+  - crossref
+  - unpaywall
+  - openalex
+  - google
+  - duckduckgo
+  - bing
+  - wikipedia
+
+# Disabled engines (not relevant for academic workflow)
+disabled_engines:
+  - shopping
+  - images
+  - videos
+  - music
+  - news
+  - files
+  - ito
+  - reddit
+  - youtube
+  - twitter
+  - instagram
+  - tiktok
+  - stackoverflow
+  - github
+  - gitlab
+
+ui:
+  default_theme: simple
+  default_locale: "en"
+  infoboxes: true
+  syntax_highlighting: false

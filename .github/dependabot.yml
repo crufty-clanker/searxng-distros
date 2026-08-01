@@ -16,6 +16,14 @@ updates:
   # ── Distro subdirs ─────────────────────────────────────────────────
 
   - package-ecosystem: "docker"
+    directory: "/distros/academia"
+    schedule:
+      interval: "weekly"
+    groups:
+      distros-academia-distro:
+        patterns: ["*"]
+
+  - package-ecosystem: "docker"
     directory: "/distros/devtools"
     schedule:
       interval: "weekly"
