@@ -23,11 +23,19 @@ COPY --from=builder /opt/searxng /opt/searxng
 COPY settings.yml /etc/searxng/settings.yml
 COPY limiter.toml /etc/searxng/limiter.toml
 
+# Create non-root user
+RUN groupadd -r searxng && useradd -r -g searxng -d /opt/searxng -s /usr/sbin/nologin searxng && \
+    chown -R searxng:searxng /opt/searxng /etc/searxng && \
+    mkdir -p /var/lib/searxng && chown searxng:searxng /var/lib/searxng
+
 ENV PATH="/opt/searxng/bin:$PATH"
 ENV SEARXNG_SETTINGS_PATH="/etc/searxng/settings.yml"
 WORKDIR /opt/searxng
 
 EXPOSE 8080
+
+# Run as non-root user
+USER searxng
 
 LABEL org.opencontainers.image.source="https://github.com/searxng/searxng-distros"
 LABEL org.opencontainers.image.title="SearXNG for Developers"
