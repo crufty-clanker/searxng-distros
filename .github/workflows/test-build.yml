@@ -28,12 +28,23 @@ jobs:
         id: discover
         shell: bash
         run: |
-          distros=$(find ./distros -maxdepth 1 -mindepth 1 -print0 | \
-            xargs -0 -I{} basename {} | \
-            sort | \
-            paste -sd ',' -)
-          echo "distros=$distros" >> "$GITHUB_OUTPUT"
-          echo "Distros: $distros"
+          # Collect subdirs into a JSON array
+          json_array="["
+          first=true
+          for dir in ./distros/*/; do
+            if [ -d "$dir" ]; then
+              name=$(basename "$dir")
+              if [ "$first" = true ]; then
+                json_array="${json_array}\"${name}\""
+                first=false
+              else
+                json_array="${json_array},\"${name}\""
+              fi
+            fi
+          done
+          json_array="${json_array}]"
+          echo "distros=$json_array" >> "$GITHUB_OUTPUT"
+          echo "Distros: $json_array"
 
   build-and-test:
     needs: discover
@@ -43,7 +54,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        distro: ${{ fromJSON(format('["{0}"]', needs.discover.outputs.distros)) }}
+        distro: ${{ fromJSON(needs.discover.outputs.distros) }}
 
     name: "test: ${{ matrix.distro }}"
 
