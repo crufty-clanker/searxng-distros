@@ -35,7 +35,10 @@ jobs:
           if [ -n "${{ github.event.inputs.distro }}" ]; then
             echo "distros=[\"${{ github.event.inputs.distro }}\"]" >> "$GITHUB_OUTPUT"
           else
-            distros=$(find ./distros -maxdepth 1 -mindepth 1 | xargs basename)
+            distros=$(find ./distros -maxdepth 1 -mindepth 1 -print0 | \
+              xargs -0 -I{} basename {} | \
+              sort | \
+              paste -sd ',' -)
             echo "distros=$distros" >> "$GITHUB_OUTPUT"
           fi
           echo "Distros: ${{ steps.discover.outputs.distros }}"
