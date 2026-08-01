@@ -17,10 +17,7 @@ Each distro lives in its own subdirectory and is maintained/tested independently
 │   └── ...               # Other distros (academia, news, osint, ...)
 ├── .github/
 │   ├── workflows/
-│   │   ├── distros.yml        # CI: syntax → build → test
-│   │   └── release.yml        # Builds OCI archives on tags
-│   ├── actions/
-│   │   └── install-buildah/   # Composite action for buildah/podman
+│   │   └── distros.yml        # CI: syntax → build → test
 │   ├── dependabot.yml         # Grouped dependency updates
 │   └── actionlint.yaml        # actionlint suppressions
 └── scripts/

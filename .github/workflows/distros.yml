@@ -53,7 +53,10 @@ jobs:
 
   syntax:
     needs: discover
-    if: github.event.inputs.step == 'syntax' || github.event.inputs.step == 'all' || !github.event.inputs.step
+    if: >-
+      github.event_name != 'workflow_dispatch' ||
+      github.event.inputs.step == 'syntax' ||
+      github.event.inputs.step == 'all'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -81,7 +84,10 @@ jobs:
 
   build:
     needs: discover
-    if: github.event.inputs.step == 'build' || github.event.inputs.step == 'all' || !github.event.inputs.step
+    if: >-
+      github.event_name != 'workflow_dispatch' ||
+      github.event.inputs.step == 'build' ||
+      github.event.inputs.step == 'all'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -125,7 +131,10 @@ jobs:
     needs:
       discover
       build
-    if: github.event.inputs.step == 'test' || github.event.inputs.step == 'all' || !github.event.inputs.step
+    if: >-
+      github.event_name != 'workflow_dispatch' ||
+      github.event.inputs.step == 'test' ||
+      github.event.inputs.step == 'all'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

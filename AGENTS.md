@@ -34,9 +34,7 @@ distros/<name>/
 
 .github/
 ├── workflows/
-│   ├── syntax-check.yml   # Auto-discovers Containerfiles, runs buildah syntax check
-│   └── build.yml          # Builds OCI archives on tags
-├── actions/install-buildah/   # Composite action for CI
+│   └── distros.yml        # CI: syntax → build → test
 ├── dependabot.yml         # Grouped dependency updates per distro
 └── actionlint.yaml        # actionlint suppressions
 
