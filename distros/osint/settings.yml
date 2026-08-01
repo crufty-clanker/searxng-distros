@@ -40,8 +40,6 @@ enabled_engines:
   - flickr_noapi
   - deviantart
   - pixiv
-  - instagram
-  - twitter
   - youtube_api
   - vimeo
   - reuters

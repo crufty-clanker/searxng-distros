@@ -1,0 +1,103 @@
+name: Engine Validation
+
+on:
+  pull_request:
+    paths:
+      - 'distros/**/settings.yml'
+      - 'scripts/validate-engines.py'
+      - '.github/workflows/engine-validation.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'distros/**/settings.yml'
+      - 'scripts/validate-engines.py'
+      - '.github/workflows/engine-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    name: "Validate SearXNG engines"
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run engine validation
+        id: validate
+        run: |
+          python3 scripts/validate-engines.py
+          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
+
+      - name: Create issue for invalid engines
+        if: steps.validate.outputs.exit_code != '0'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { execSync } = require('child_process');
+            const output = execSync('python3 scripts/validate-engines.py 2>&1 || true').toString();
+            
+            // Parse the output to extract issues
+            const lines = output.split('\n');
+            const issues = [];
+            let currentDistro = null;
+            
+            for (const line of lines) {
+              if (line.match(/^🔍 .+\//)) {
+                currentDistro = line.replace('🔍 ', '').replace('/', '');
+              }
+              if (line.match(/^  ❌ .*: .+ invalid engine/)) {
+                const match = line.match(/❌ (.+): (\d+) invalid engine/);
+                if (match && currentDistro) {
+                  issues.push({
+                    distro: currentDistro,
+                    section: match[1],
+                    count: match[2]
+                  });
+                }
+              }
+            }
+            
+            if (issues.length > 0) {
+              const title = `[engine-validation] Invalid SearXNG engines in ${issues.length} distro(s)`;
+              const body = `## Engine Validation Failed\n\nThe SearXNG engine validation found invalid engine names in the following distros:\n\n${issues.map(i => `- **${i.distro}**: ${i.count} invalid engine(s) in \`${i.section}\``).join('\n')}\n\n## Next Steps\n\n1. Check the invalid engine names listed above\n2. Verify against the [SearXNG engine list](https://github.com/searxng/searxng/tree/master/searx/engines)\n3. Update \`distros/<distro>/settings.yml\` with valid engine names\n4. Run locally: \`python3 scripts/validate-engines.py\`\n\n## Validation Command\n\n\`\`\`bash\npython3 scripts/validate-engines.py\n\`\`\``;
+              
+              github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['engine-validation', 'bug']
+              });
+            }
+
+      - name: Comment on PR if issues found
+        if: steps.validate.outputs.exit_code != '0' && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { execSync } = require('child_process');
+            const output = execSync('python3 scripts/validate-engines.py 2>&1 || true').toString();
+            
+            const lines = output.split('\n');
+            const invalidLines = lines.filter(l => l.includes('❌'));
+            
+            if (invalidLines.length > 0) {
+              const comment = `## ❌ Engine Validation Failed\n\nInvalid SearXNG engine names found:\n\n\`\`\`\n${invalidLines.join('\n')}\n\`\`\`\n\nPlease fix the invalid engines and push again.`;
+              
+              github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment
+              });
+            }
