@@ -34,12 +34,15 @@ distros/<name>/
 
 .github/
 ├── workflows/
-│   └── distros.yml        # CI: syntax → build → test
+│   ├── distros.yml              # CI: syntax → build → test
+│   ├── dependabot-sync.yml      # Sync dependabot.yml with distros/
+│   └── engine-validation.yml    # Validate SearXNG engine names
 ├── dependabot.yml         # Grouped dependency updates per distro
 └── actionlint.yaml        # actionlint suppressions
 
 scripts/
-└── regenerate-dependabot.sh  # Sync dependabot config with distros
+├── regenerate-dependabot.sh  # Sync dependabot config with distros
+└── validate-engines.py       # Validate SearXNG engine names
 ```
 
 ## Constraints
@@ -66,48 +69,14 @@ scripts/
 Before committing changes to `settings.yml`, validate that all engines in `enabled_engines` and `disabled_engines` are real SearXNG engines:
 
 ```bash
-python3 -c "
-import json
-import urllib.request
-from pathlib import Path
-
-url = 'https://api.github.com/repos/searxng/searxng/contents/searx/engines'
-req = urllib.request.Request(url, headers={'User-Agent': 'Python'})
-with urllib.request.urlopen(req) as response:
-    data = json.loads(response.read())
-    real_engines = sorted([item['name'].replace('.py', '') for item in data])
-
-for settings_file in Path('distros').glob('*/settings.yml'):
-    with open(settings_file) as f:
-        content = f.read()
-    in_section = None
-    section = []
-    for line in content.split('\n'):
-        if line.strip() == 'enabled_engines:':
-            in_section = 'enabled'
-            section = []
-        elif line.strip() == 'disabled_engines:':
-            in_section = 'disabled'
-            section = []
-        elif in_section and line.startswith('  - '):
-            engine = line.strip().replace('- ', '').strip()
-            section.append(engine)
-        elif in_section and not line.startswith('  - ') and not line.startswith('  #'):
-            if in_section == 'enabled':
-                invalid = [e for e in section if e not in real_engines]
-                if invalid:
-                    print(f'❌ {settings_file}: Invalid enabled engines: {invalid}')
-                else:
-                    print(f'✅ {settings_file}: All enabled engines valid')
-            elif in_section == 'disabled':
-                invalid = [e for e in section if e not in real_engines]
-                if invalid:
-                    print(f'❌ {settings_file}: Invalid disabled engines: {invalid}')
-                else:
-                    print(f'✅ {settings_file}: All disabled engines valid')
-            in_section = None
-"
+python3 scripts/validate-engines.py
 ```
+
+This script:
+- Fetches the real engine list from SearXNG master branch
+- Validates all engines in all distros
+- Reports invalid engines with counts
+- Exits with code 1 if any invalid engines found
 
 Or use a simpler one-liner to check for common invalid engines:
 
@@ -124,11 +93,17 @@ The `distros` workflow validates:
 - OCI archive build
 - Container health check (HTTP 200 on /health endpoint)
 
+The `engine-validation` workflow validates:
+- All engines in `enabled_engines` and `disabled_engines` are real SearXNG engines
+- Creates issues for invalid engines
+- Comments on PRs if issues found
+
 ## CI/CD
 
 - **distros**: Runs on PR/push/manual. Three steps: syntax → build → test.
   - Use `workflow_dispatch` with `step` input to run specific step.
 - **dependabot-sync**: Runs on PR (distro changes), daily, or manual. Ensures `dependabot.yml` stays in sync with `distros/`.
+- **engine-validation**: Runs on PR/push/manual. Validates all SearXNG engine names are real. Creates issues for invalid engines.
 - **dependabot**: Groups updates per distro subdir + GitHub Actions.
 
 ## Linting

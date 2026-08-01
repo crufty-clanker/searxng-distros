@@ -9,31 +9,34 @@ Each distro lives in its own subdirectory and is maintained/tested independently
 ```
 .
 ├── distros/
-│   ├── devtools/         # SearXNG for software developers
-│   │   ├── Containerfile
-│   │   ├── settings.yml
-│   │   ├── limiter.toml
-│   │   └── README.md
-│   └── ...               # Other distros (academia, news, osint, ...)
+│   ├── academia/         # Scholar, arXiv, PubMed, Crossref, OpenAlex
+│   ├── archiver/         # Anna's Archive, Z-Library, Open Library
+│   ├── devtools/         # Stack Exchange, GitHub, GitLab, PyPI, npm, crates
+│   ├── news/             # Google News, Bing News, Reuters, Tagesschau
+│   ├── osint/            # Google Images, Flickr, Unsplash, OpenStreetMap
+│   └── purpleteam/       # NVD, GitHub Code, Hacker News, PrivacyWall
 ├── .github/
 │   ├── workflows/
-│   │   └── distros.yml        # CI: syntax → build → test
+│   │   ├── distros.yml              # CI: syntax → build → test
+│   │   ├── dependabot-sync.yml      # Sync dependabot.yml with distros/
+│   │   └── engine-validation.yml    # Validate SearXNG engine names
 │   ├── dependabot.yml         # Grouped dependency updates
 │   └── actionlint.yaml        # actionlint suppressions
 └── scripts/
-    └── regenerate-dependabot.sh  # Sync dependabot config with subdirs
+    ├── regenerate-dependabot.sh  # Sync dependabot config with subdirs
+    └── validate-engines.py       # Validate SearXNG engine names
 ```
 
 ## Available distros
 
 | Distro | Focus |
 |--------|-------|
+| [`academia`](distros/academia/) | Google Scholar, arXiv, PubMed, Crossref, OpenAlex |
+| [`archiver`](distros/archiver/) | Anna's Archive, Z-Library, Open Library |
 | [`devtools`](distros/devtools/) | Stack Exchange, GitHub, GitLab, PyPI, npm, crates |
-| `academia` | Google Scholar, arXiv, PubMed, Crossref, OpenAlex |
-| `news` | Google News, Bing News, Reuters, Tagesschau |
-| `archiver` | Anna's Archive, Z-Library, Open Library |
-| `purpleteam` | NVD, GitHub Code, Hacker News, PrivacyWall |
-| `osint` | Google Images, Flickr, Unsplash, OpenStreetMap |
+| [`news`](distros/news/) | Google News, Bing News, Reuters, Tagesschau |
+| [`osint`](distros/osint/) | Google Images, Flickr, Unsplash, OpenStreetMap |
+| [`purpleteam`](distros/purpleteam/) | NVD, GitHub Code, Hacker News, PrivacyWall |
 
 ## Adding a new distro
 
