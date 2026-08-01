@@ -14,13 +14,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  syntax-check:
+  discover:
     runs-on: ubuntu-latest
-    name: "syntax: ${{ matrix.distro }}"
-
-    if: needs.syntax-check.outputs.distros != ''
-
-    # Auto-discover subdirs that contain Containerfile(s)
     outputs:
       distros: ${{ steps.discover.outputs.distros }}
 
@@ -40,14 +35,14 @@ jobs:
           echo "Found: $distros"
 
   validate:
-    needs: syntax-check
+    needs: discover
     runs-on: ubuntu-latest
-    if: needs.syntax-check.outputs.distros != ''
+    if: needs.discover.outputs.distros != ''
 
     strategy:
       fail-fast: false
       matrix:
-        distro: ${{ fromJSON(format('["{0}"]', needs.syntax-check.outputs.distros)) }}
+        distro: ${{ fromJSON(format('["{0}"]', needs.discover.outputs.distros)) }}
 
     name: "syntax: ${{ matrix.distro }}"
 
