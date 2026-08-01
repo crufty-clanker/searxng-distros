@@ -7,12 +7,6 @@ on:
       - 'distros/**/settings.yml'
       - 'distros/**/limiter.toml'
       - '.github/workflows/test-build.yml'
-  push:
-    branches: [main]
-    paths:
-      - 'distros/**/Containerfile'
-      - 'distros/**/settings.yml'
-      - 'distros/**/limiter.toml'
 
 jobs:
   discover:
