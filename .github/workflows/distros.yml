@@ -117,7 +117,7 @@ jobs:
           buildah push "${{ steps.build.outputs.image }}:oci-${{ matrix.distro }}" "oci-archive:/tmp/${{ matrix.distro }}.tar"
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: "${{ matrix.distro }}-image"
           path: /tmp/${{ matrix.distro }}.tar
@@ -148,7 +148,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Download image
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: "${{ matrix.distro }}-image"
           path: /tmp/
