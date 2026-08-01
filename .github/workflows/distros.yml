@@ -1,0 +1,156 @@
+name: Distro CI
+
+on:
+  pull_request:
+    paths:
+      - 'distros/**/Containerfile'
+      - 'distros/**/settings.yml'
+      - 'distros/**/limiter.toml'
+      - '.github/workflows/distros.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'distros/**/Containerfile'
+      - 'distros/**/settings.yml'
+      - 'distros/**/limiter.toml'
+  workflow_dispatch:
+    inputs:
+      step:
+        description: 'Which step to run'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - syntax
+          - build
+          - test
+          - all
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      distros: ${{ steps.discover.outputs.distros }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Discover distro subdirs
+        id: discover
+        shell: bash
+        run: |
+          distros=$(find ./distros -maxdepth 1 -mindepth 1 -print0 | \
+            xargs -0 -I{} basename {} | \
+            sort | \
+            jq -R -s 'split("\n") | map(select(length > 0))')
+          echo "distros=$distros" >> "$GITHUB_OUTPUT"
+          echo "Found: $distros"
+
+  syntax:
+    needs: discover
+    if: github.event.inputs.step == 'syntax' || github.event.inputs.step == 'all' || !github.event.inputs.step
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        distro: ${{ fromJSON(needs.discover.outputs.distros) }}
+
+    name: "syntax: ${{ matrix.distro }}"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install Buildah
+        uses: ./.github/actions/install-buildah
+
+      - name: Syntax check
+        run: |
+          buildah bud \
+            --isolation chroot \
+            --quiet \
+            --layers=false \
+            -f "${{ matrix.distro }}/Containerfile" \
+            "${{ matrix.distro }}"
+
+  build:
+    needs: discover
+    if: github.event.inputs.step == 'build' || github.event.inputs.step == 'all' || !github.event.inputs.step
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        distro: ${{ fromJSON(needs.discover.outputs.distros) }}
+
+    name: "build: ${{ matrix.distro }}"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install Buildah
+        uses: ./.github/actions/install-buildah
+
+      - name: Build OCI image
+        run: |
+          buildah bud \
+            --format oci \
+            --isolation chroot \
+            --tag "oci-archive:/tmp/${{ matrix.distro }}.tar" \
+            -f "${{ matrix.distro }}/Containerfile" \
+            "${{ matrix.distro }}"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{ matrix.distro }}-image"
+          path: /tmp/${{ matrix.distro }}.tar
+          retention-days: 5
+
+      - name: Cleanup
+        if: always()
+        run: rm -f /tmp/${{ matrix.distro }}.tar
+
+  test:
+    needs: discover
+    if: github.event.inputs.step == 'test' || github.event.inputs.step == 'all' || !github.event.inputs.step
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        distro: ${{ fromJSON(needs.discover.outputs.distros) }}
+
+    name: "test: ${{ matrix.distro }}"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install Buildah
+        uses: ./.github/actions/install-buildah
+
+      - name: Build OCI image
+        id: build
+        run: |
+          buildah bud \
+            --format oci \
+            --isolation chroot \
+            --tag "oci-archive:/tmp/${{ matrix.distro }}.tar" \
+            -f "${{ matrix.distro }}/Containerfile" \
+            "${{ matrix.distro }}"
+
+      - name: Test container health
+        run: |
+          CONTAINER=$(buildah from "oci-archive:/tmp/${{ matrix.distro }}.tar")
+          buildah run --isolation chroot "$CONTAINER" \
+            sh -c "python -m searx.webapp &"
+          sleep 5
+          curl --retry 5 --retry-delay 2 --retry-connrefused \
+            --fail-with-body \
+            http://localhost:8080/health
+          buildah rm "$CONTAINER"
+
+      - name: Cleanup
+        if: always()
+        run: rm -f /tmp/${{ matrix.distro }}.tar

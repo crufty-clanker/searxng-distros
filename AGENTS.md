@@ -63,8 +63,8 @@ scripts/
 
 ## CI/CD
 
-- **syntax-check**: Runs on PR/push when Containerfiles change. Auto-discovers subdirs.
-- **build**: Runs on tag push (`v*`) or manual dispatch. Builds OCI archives per distro.
+- **distros**: Runs on PR/push/manual. Three steps: syntax → build → test.
+  - Use `workflow_dispatch` with `step` input to run specific step.
 - **dependabot**: Groups updates per distro subdir + GitHub Actions.
 
 ## Linting

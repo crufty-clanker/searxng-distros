@@ -17,8 +17,8 @@ Each distro lives in its own subdirectory and is maintained/tested independently
 │   └── ...               # Other distros (academia, news, osint, ...)
 ├── .github/
 │   ├── workflows/
-│   │   ├── syntax-check.yml   # Validates Containerfiles on PR/push
-│   │   └── build.yml          # Builds OCI images on tags
+│   │   ├── distros.yml        # CI: syntax → build → test
+│   │   └── release.yml        # Builds OCI archives on tags
 │   ├── actions/
 │   │   └── install-buildah/   # Composite action for buildah/podman
 │   ├── dependabot.yml         # Grouped dependency updates
@@ -47,10 +47,9 @@ Each distro lives in its own subdirectory and is maintained/tested independently
 
 ## CI workflows
 
-| Workflow      | Trigger                          | What it does                                  |
-|---------------|----------------------------------|-----------------------------------------------|
-| `syntax-check`| PR or push (when Containerfiles change) | Validates every `Containerfile` with `buildah bud` |
-| `build`       | Tag push (`v*`) or manual        | Builds OCI archives per distro, optionally pushes to registry |
+| Workflow  | Trigger                          | What it does                                  |
+|-----------|----------------------------------|-----------------------------------------------|
+| `distros` | PR, push, or manual              | Three steps: syntax → build → test            |
 
 ## Building locally
 
