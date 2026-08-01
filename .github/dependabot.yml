@@ -24,6 +24,14 @@ updates:
         patterns: ["*"]
 
   - package-ecosystem: "docker"
+    directory: "/distros/archiver"
+    schedule:
+      interval: "weekly"
+    groups:
+      distros-archiver-distro:
+        patterns: ["*"]
+
+  - package-ecosystem: "docker"
     directory: "/distros/devtools"
     schedule:
       interval: "weekly"
