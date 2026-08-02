@@ -129,8 +129,8 @@ jobs:
 
   test:
     needs:
-      discover
-      build
+      - discover
+      - build
     if: >-
       github.event_name != 'workflow_dispatch' ||
       github.event.inputs.step == 'test' ||
