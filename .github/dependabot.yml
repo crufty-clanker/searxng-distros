@@ -46,3 +46,19 @@ updates:
     groups:
       distros-news-distro:
         patterns: ["*"]
+
+  - package-ecosystem: "docker"
+    directory: "/distros/osint"
+    schedule:
+      interval: "weekly"
+    groups:
+      distros-osint-distro:
+        patterns: ["*"]
+
+  - package-ecosystem: "docker"
+    directory: "/distros/purpleteam"
+    schedule:
+      interval: "weekly"
+    groups:
+      distros-purpleteam-distro:
+        patterns: ["*"]
