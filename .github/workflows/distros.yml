@@ -70,7 +70,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Install buildah
-        uses: redhat-actions/install-buildah@v2
+        run: sudo apt-get update && sudo apt-get install -y buildah
 
       - name: Syntax check
         run: |
@@ -97,7 +97,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Install buildah
-        uses: redhat-actions/install-buildah@v2
+        run: sudo apt-get update && sudo apt-get install -y buildah
 
       - name: Build image
         id: build
