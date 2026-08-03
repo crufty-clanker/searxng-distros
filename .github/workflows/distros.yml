@@ -35,21 +35,45 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0  # Required for git diff
 
-      - name: Discover distro subdirs
+      - name: Discover changed distros
         id: discover
         shell: bash
         run: |
-          distros=$(find ./distros -maxdepth 1 -mindepth 1 -print0 | \
-            xargs -0 -I{} basename {} | \
-            sort | \
-            jq -R -s 'split("\n") | map(select(length > 0))')
+          # Get list of changed distros
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            # For PRs, get changed distros from base to head
+            BASE_REF="${{ github.event.pull_request.base.sha }}"
+            HEAD_REF="${{ github.event.pull_request.head.sha }}"
+            CHANGED_DISTROS=$(git diff --name-only "$BASE_REF"..."$HEAD_REF" -- distros/ 2>/dev/null | \
+              grep -E '^distros/[^/]+/' | \
+              cut -d'/' -f2 | \
+              sort -u | \
+              jq -R -s 'split("\n") | map(select(length > 0))')
+          else
+            # For pushes, run all distros
+            CHANGED_DISTROS=$(find ./distros -maxdepth 1 -mindepth 1 -print0 | \
+              xargs -0 -I{} basename {} | \
+              sort | \
+              jq -R -s 'split("\n") | map(select(length > 0))')
+          fi
+          
+          # Default to all distros if no changes detected
+          if [ -z "$CHANGED_DISTROS" ] || [ "$CHANGED_DISTROS" = "[]" ]; then
+            CHANGED_DISTROS=$(find ./distros -maxdepth 1 -mindepth 1 -print0 | \
+              xargs -0 -I{} basename {} | \
+              sort | \
+              jq -R -s 'split("\n") | map(select(length > 0))')
+          fi
+          
           {
             echo "distros<<EOF"
-            echo "$distros"
+            echo "$CHANGED_DISTROS"
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
-          echo "Found: $distros"
+          echo "Distros to process: $CHANGED_DISTROS"
 
   syntax:
     needs: discover
