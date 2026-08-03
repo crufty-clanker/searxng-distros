@@ -122,7 +122,7 @@ jobs:
         run: |
           buildah bud --quiet \
             --format oci \
-            --output type=oci,dest=/tmp/${{ matrix.distro }}.tar \
+            --output type=tar,dest=/tmp/${{ matrix.distro }}.tar \
             -f "${{ github.workspace }}/distros/${{ matrix.distro }}/Containerfile" \
             "${{ github.workspace }}/distros/${{ matrix.distro }}"
           
