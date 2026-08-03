@@ -133,10 +133,6 @@ jobs:
           retention-days: 5
           compression: false
 
-      - name: Cleanup
-        if: always()
-        run: rm -f /tmp/${{ matrix.distro }}.tar
-
   test:
     needs:
       - discover
