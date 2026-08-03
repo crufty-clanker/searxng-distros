@@ -163,7 +163,6 @@ jobs:
         with:
           name: "${{ matrix.distro }}.tar"
           path: /tmp
-          skip-decompress: true
 
       - name: Verify artifact
         run: |
@@ -228,7 +227,6 @@ jobs:
         with:
           name: "${{ matrix.distro }}.tar"
           path: /tmp
-          skip-decompress: true
 
       - name: Verify artifact
         run: |
