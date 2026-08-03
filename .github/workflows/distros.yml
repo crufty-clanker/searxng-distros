@@ -129,7 +129,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: "${{ matrix.distro }}.tar"
-          path: /tmp/${{ matrix.distro }}.tar
+          path: "/tmp/${{ matrix.distro }}.tar"
           retention-days: 1
           compression: false
 
@@ -157,8 +157,17 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: "${{ matrix.distro }}.tar"
-          path: /tmp/
+          path: /tmp
           compression: false
+
+      - name: Verify artifact
+        run: |
+          ls -la /tmp/
+          if [ ! -f "/tmp/${{ matrix.distro }}.tar" ]; then
+            echo "ERROR: ${matrix.distro}.tar not found in /tmp/"
+            exit 1
+          fi
+          echo "Found: /tmp/${{ matrix.distro }}.tar"
 
       - name: Test container health
         run: |
@@ -213,8 +222,17 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: "${{ matrix.distro }}.tar"
-          path: /tmp/
+          path: /tmp
           compression: false
+
+      - name: Verify artifact
+        run: |
+          ls -la /tmp/
+          if [ ! -f "/tmp/${{ matrix.distro }}.tar" ]; then
+            echo "ERROR: ${matrix.distro}.tar not found in /tmp/"
+            exit 1
+          fi
+          echo "Found: /tmp/${{ matrix.distro }}.tar"
 
       - name: Run container and check logs
         id: run
