@@ -122,8 +122,9 @@ The `engine-validation` workflow validates:
 
 ## CI/CD
 
-- **distros**: Runs on PR/push/manual. Three steps: syntax → build → test.
+- **distros**: Runs on PR/push/manual. Four steps: syntax → build → test → test-run.
   - Use `workflow_dispatch` with `step` input to run specific step.
+  - `test-run` runs the container and checks logs for errors (most reliable validation)
 - **dependabot-sync**: Runs on PR (distro changes), daily, or manual. Ensures `dependabot.yml` stays in sync with `distros/`.
 - **engine-validation**: Runs on PR/push/manual. Validates all SearXNG engine names are real. Creates issues for invalid engines.
 - **dependabot**: Groups updates per distro subdir + GitHub Actions.

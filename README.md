@@ -49,9 +49,11 @@ Each distro lives in its own subdirectory and is maintained/tested independently
 
 | Workflow           | Trigger                          | What it does                                  |
 |--------------------|----------------------------------|-----------------------------------------------|
-| `distros`          | PR, push, or manual              | Three steps: syntax → build → test            |
+| `distros`          | PR, push, or manual              | Four steps: syntax → build → test → test-run  |
 | `dependabot-sync`  | PR (distro changes), daily, or manual | Checks `dependabot.yml` is in sync with `distros/`, opens PR if not |
 | `engine-validation` | Manual or on PR                  | Validates all engines in settings.yml are real SearXNG engines |
+
+The `test-run` job is the most reliable validation — it actually starts SearXNG and checks the logs for errors.
 
 ## Engine Validation
 
