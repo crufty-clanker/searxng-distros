@@ -30,7 +30,7 @@ def fetch_real_engines() -> List[str]:
 
 
 def parse_settings(filepath: Path) -> Dict[str, List[str]]:
-    """Parse settings.yml and extract enabled_engines and disabled_engines."""
+    """Parse settings.yml and extract engines from keep_only or enabled_engines."""
     result = {"enabled": [], "disabled": []}
     
     with open(filepath) as f:
@@ -42,9 +42,15 @@ def parse_settings(filepath: Path) -> Dict[str, List[str]]:
     for line in content.split("\n"):
         stripped = line.strip()
         
-        if stripped == "enabled_engines:":
+        # Handle new format: engines.keep_only
+        if "keep_only:" in stripped:
             in_section = "enabled"
             current_section = result["enabled"]
+        # Handle old format: enabled_engines
+        elif stripped == "enabled_engines:":
+            in_section = "enabled"
+            current_section = result["enabled"]
+        # Handle old format: disabled_engines
         elif stripped == "disabled_engines:":
             in_section = "disabled"
             current_section = result["disabled"]
