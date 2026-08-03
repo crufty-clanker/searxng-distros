@@ -107,6 +107,7 @@ jobs:
           name: "${{ matrix.distro }}-image"
           path: /tmp/${{ matrix.distro }}.tar
           retention-days: 5
+          compression: false
 
       - name: Cleanup
         if: always()
@@ -137,6 +138,7 @@ jobs:
         with:
           name: "${{ matrix.distro }}-image"
           path: /tmp/
+          compression: false
 
       - name: Test container health
         run: |
@@ -192,6 +194,7 @@ jobs:
         with:
           name: "${{ matrix.distro }}-image"
           path: /tmp/
+          compression: false
 
       - name: Run container and check logs
         id: run
