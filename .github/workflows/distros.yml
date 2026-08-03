@@ -124,6 +124,11 @@ jobs:
             -f "${{ github.workspace }}/distros/${{ matrix.distro }}/Containerfile" \
             -o "/tmp/${{ matrix.distro }}.tar" \
             "${{ github.workspace }}/distros/${{ matrix.distro }}"
+          
+          # Verify the output file
+          echo "Build output:"
+          ls -lh /tmp/${{ matrix.distro }}.tar
+          file /tmp/${{ matrix.distro }}.tar
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7
