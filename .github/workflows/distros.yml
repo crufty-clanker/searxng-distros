@@ -120,9 +120,10 @@ jobs:
       - name: Build image
         id: build
         run: |
-          buildah bud --format oci --quiet \
+          buildah bud --quiet \
+            --format oci \
+            --output type=oci,dest=/tmp/${{ matrix.distro }}.tar \
             -f "${{ github.workspace }}/distros/${{ matrix.distro }}/Containerfile" \
-            -o "/tmp/${{ matrix.distro }}.tar" \
             "${{ github.workspace }}/distros/${{ matrix.distro }}"
           
           # Verify the output file
