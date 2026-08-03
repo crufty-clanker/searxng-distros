@@ -55,47 +55,42 @@ Each distro lives in its own subdirectory and is maintained/tested independently
 
 ## Engine Validation
 
-Before committing changes to `settings.yml`, validate that all engines in `enabled_engines` and `disabled_engines` are real SearXNG engines using this Python script:
+Before committing changes to `settings.yml`, validate that all engines are real SearXNG engines:
 
 ```bash
-python3 << 'EOF'
-import json
-import urllib.request
-from pathlib import Path
-
-url = 'https://api.github.com/repos/searxng/searxng/contents/searx/engines'
-req = urllib.request.Request(url, headers={'User-Agent': 'Python'})
-with urllib.request.urlopen(req) as response:
-    data = json.loads(response.read())
-    real_engines = sorted([item['name'].replace('.py', '') for item in data])
-
-for settings_file in Path('distros').glob('*/settings.yml'):
-    with open(settings_file) as f:
-        content = f.read()
-    in_section = None
-    section = []
-    for line in content.split('\n'):
-        if line.strip() == 'enabled_engines:':
-            in_section = 'enabled'
-            section = []
-        elif line.strip() == 'disabled_engines:':
-            in_section = 'disabled'
-            section = []
-        elif in_section and line.startswith('  - '):
-            engine = line.strip().replace('- ', '').strip()
-            section.append(engine)
-        elif in_section and not line.startswith('  - ') and not line.startswith('  #'):
-            if in_section == 'enabled':
-                invalid = [e for e in section if e not in real_engines]
-                status = '❌' if invalid else '✅'
-                print(f'{status} {settings_file}: {"Invalid: " + str(invalid) if invalid else "All valid"}')
-            elif in_section == 'disabled':
-                invalid = [e for e in section if e not in real_engines]
-                status = '❌' if invalid else '✅'
-                print(f'{status} {settings_file}: {"Invalid: " + str(invalid) if invalid else "All valid"}')
-            in_section = None
-EOF
+python3 scripts/validate-engines.py
 ```
+
+This script fetches the real engine list from SearXNG master and validates all engines in all distros.
+
+### SearXNG Configuration Format
+
+SearXNG uses `use_default_settings: true` which loads the default engine list. To configure engines:
+
+```yaml
+use_default_settings: true
+
+engines:
+  # Keep only these engines (all others disabled)
+  keep_only:
+    - google
+    - duckduckgo
+    - bing
+    - wikipedia
+```
+
+Or to remove specific engines:
+
+```yaml
+use_default_settings: true
+
+engines:
+  remove:
+    - shopping
+    - images
+```
+
+The `enabled_engines` and `disabled_engines` keys are **not standard SearXNG** and won't work.
 
 ## Building locally
 
