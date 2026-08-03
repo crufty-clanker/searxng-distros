@@ -131,7 +131,6 @@ jobs:
           name: "${{ matrix.distro }}.tar"
           path: "/tmp/${{ matrix.distro }}.tar"
           retention-days: 1
-          compression: false
 
   test:
     needs:
@@ -158,7 +157,7 @@ jobs:
         with:
           name: "${{ matrix.distro }}.tar"
           path: /tmp
-          compression: false
+          skip-decompress: true
 
       - name: Verify artifact
         run: |
@@ -223,7 +222,7 @@ jobs:
         with:
           name: "${{ matrix.distro }}.tar"
           path: /tmp
-          compression: false
+          skip-decompress: true
 
       - name: Verify artifact
         run: |
