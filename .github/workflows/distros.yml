@@ -69,18 +69,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      - name: Install buildah
+        uses: redhat-actions/install-buildah@v2
+
       - name: Syntax check
-        uses: redhat-actions/buildah-build@v3
-        with:
-          image: "syntax-${{ matrix.distro }}"
-          tags: latest
-          context: "${{ github.workspace }}/distros/${{ matrix.distro }}"
-          containerfiles: |
-            Containerfile
-          buildah-image: quay.io/buildah/stable
-          extra-args: |
-            --quiet
-            --layers=false
+        run: |
+          buildah bud --isolation chroot --quiet \
+            -f "${{ github.workspace }}/distros/${{ matrix.distro }}/Containerfile" \
+            "${{ github.workspace }}/distros/${{ matrix.distro }}"
 
   build:
     needs: discover
@@ -100,21 +96,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      - name: Install buildah
+        uses: redhat-actions/install-buildah@v2
+
       - name: Build image
         id: build
-        uses: redhat-actions/buildah-build@v3
-        with:
-          image: "${{ matrix.distro }}"
-          tags: "oci-${{ matrix.distro }}"
-          oci: true
-          context: "${{ github.workspace }}/distros/${{ matrix.distro }}"
-          containerfiles: |
-            Containerfile
-          buildah-image: quay.io/buildah/stable
-
-      - name: Export to OCI archive
         run: |
-          buildah push "${{ steps.build.outputs.image }}:oci-${{ matrix.distro }}" "oci-archive:/tmp/${{ matrix.distro }}.tar"
+          buildah bud --format oci --quiet \
+            -f "${{ github.workspace }}/distros/${{ matrix.distro }}/Containerfile" \
+            -o "/tmp/${{ matrix.distro }}.tar" \
+            "${{ github.workspace }}/distros/${{ matrix.distro }}"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7
