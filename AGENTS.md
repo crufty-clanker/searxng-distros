@@ -66,7 +66,7 @@ scripts/
 
 ### Engine Validation
 
-Before committing changes to `settings.yml`, validate that all engines in `enabled_engines` and `disabled_engines` are real SearXNG engines:
+Before committing changes to `settings.yml`, validate that all engines are real SearXNG engines:
 
 ```bash
 python3 scripts/validate-engines.py
@@ -78,13 +78,35 @@ This script:
 - Reports invalid engines with counts
 - Exits with code 1 if any invalid engines found
 
-Or use a simpler one-liner to check for common invalid engines:
+### SearXNG Configuration Format
 
-```bash
-grep -E '^\s+- (shopping|images|videos|music|news|files|ito|reddit|youtube|twitter|instagram|tiktok)\b' distros/*/settings.yml
+SearXNG uses `use_default_settings: true` which loads the default engine list and then merges/overrides with your settings.
+
+**To keep only specific engines:**
+
+```yaml
+use_default_settings: true
+
+engines:
+  keep_only:
+    - google
+    - duckduckgo
+    - bing
+    - wikipedia
 ```
 
-This will show any lines using category names instead of actual engine names.
+**To remove specific engines:**
+
+```yaml
+use_default_settings: true
+
+engines:
+  remove:
+    - shopping
+    - images
+```
+
+The `enabled_engines` and `disabled_engines` keys are **not standard SearXNG** and won't work. Always use `engines.keep_only` or `engines.remove`.
 
 ### CI/CD Validation
 
@@ -94,7 +116,7 @@ The `distros` workflow validates:
 - Container health check (HTTP 200 on /health endpoint)
 
 The `engine-validation` workflow validates:
-- All engines in `enabled_engines` and `disabled_engines` are real SearXNG engines
+- All engines in `engines.keep_only` are real SearXNG engines
 - Creates issues for invalid engines
 - Comments on PRs if issues found
 
