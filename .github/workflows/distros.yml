@@ -175,7 +175,7 @@ jobs:
 
       - name: Test container health
         run: |
-          CONTAINER=$(buildah from "oci-archive:/tmp/${{ matrix.distro }}.tar")
+          CONTAINER=$(buildah from "oci-archive:/tmp/${{ matrix.distro }}.tar:latest")
           buildah run --isolation chroot "$CONTAINER" \
             sh -c "python -m searx.webapp &"
           # Wait for server to be ready with proper status code check
@@ -240,7 +240,7 @@ jobs:
       - name: Run container and check logs
         id: run
         run: |
-          CONTAINER=$(buildah from "oci-archive:/tmp/${{ matrix.distro }}.tar")
+          CONTAINER=$(buildah from "oci-archive:/tmp/${{ matrix.distro }}.tar:latest")
           
           # Run SearXNG in background and capture output
           buildah run --isolation chroot "$CONTAINER" \
