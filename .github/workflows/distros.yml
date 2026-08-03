@@ -69,9 +69,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Install buildah
-        run: sudo apt-get update && sudo apt-get install -y buildah
-
       - name: Syntax check
         run: |
           buildah bud --isolation chroot --quiet \
@@ -95,9 +92,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
-
-      - name: Install buildah
-        run: sudo apt-get update && sudo apt-get install -y buildah
 
       - name: Build image
         id: build
