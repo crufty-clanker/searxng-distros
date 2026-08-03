@@ -23,51 +23,29 @@ server:
   limiter: true
   image_proxy: false
 
-# Enable OSINT-focused engines
-enabled_engines:
-  - google
-  - google_images
-  - duckduckgo
-  - bing
-  - wikipedia
-  - wikidata
-  - openstreetmap
-  - wikicommons
-  - giphy
-  - unsplash
-  - pexels
-  - flickr
-  - flickr_noapi
-  - deviantart
-  - pixiv
-  - youtube_api
-  - vimeo
-  - reuters
-  - tagesschau
-
-# Disabled engines (not relevant for OSINT workflow)
-disabled_engines:
-  - bing_images
-  - bing_videos
-  - google_videos
-  - google_news
-  - bing_news
-  - youtube_noapi
-  - soundcloud
-  - spotify
-  - dailymotion
-  - piped
-  - odysee
-  - rumble
-  - 9gag
-  - imgur
-  - stackexchange
-  - github
-  - gitlab
-  - arxiv
-  - pubmed
-  - crossref
-  - openalex
+# Engine configuration
+engines:
+  # Keep only these engines (all others disabled)
+  keep_only:
+    - google
+    - google_images
+    - duckduckgo
+    - bing
+    - wikipedia
+    - wikidata
+    - openstreetmap
+    - wikicommons
+    - giphy
+    - unsplash
+    - pexels
+    - flickr
+    - flickr_noapi
+    - deviantart
+    - pixiv
+    - youtube_api
+    - vimeo
+    - reuters
+    - tagesschau
 
 ui:
   default_theme: simple

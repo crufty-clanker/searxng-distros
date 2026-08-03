@@ -23,41 +23,21 @@ server:
   limiter: true
   image_proxy: false
 
-# Enable developer-focused engines
-enabled_engines:
-  - stackexchange
-  - github
-  - gitlab
-  - pypi
-  - npm
-  - crates
-  - google
-  - google_scholar
-  - duckduckgo
-  - bing
-  - wikipedia
-
-# Disabled engines (not relevant for dev workflow)
-disabled_engines:
-  - bing_images
-  - bing_videos
-  - google_images
-  - google_videos
-  - google_news
-  - bing_news
-  - youtube_noapi
-  - youtube_api
-  - soundcloud
-  - spotify
-  - vimeo
-  - dailymotion
-  - piped
-  - odysee
-  - rumble
-  - 9gag
-  - imgur
-  - deviantart
-  - pixiv
+# Engine configuration
+engines:
+  # Keep only these engines (all others disabled)
+  keep_only:
+    - stackexchange
+    - github
+    - gitlab
+    - pypi
+    - npm
+    - crates
+    - google
+    - google_scholar
+    - duckduckgo
+    - bing
+    - wikipedia
 
 ui:
   default_theme: simple

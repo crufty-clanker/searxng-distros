@@ -23,50 +23,23 @@ server:
   limiter: true
   image_proxy: false
 
-# Enable security-focused engines
-enabled_engines:
-  - google
-  - duckduckgo
-  - bing
-  - wikipedia
-  - wikidata
-  - nvd
-  - github_code
-  - hackernews
-  - privacywall
-  - sourcehut
-  - gitea
-  - reuters
-  - tagesschau
-
-# Disabled engines (not relevant for security workflow)
-disabled_engines:
-  - bing_images
-  - bing_videos
-  - google_images
-  - google_videos
-  - google_news
-  - bing_news
-  - youtube_noapi
-  - youtube_api
-  - soundcloud
-  - spotify
-  - vimeo
-  - dailymotion
-  - piped
-  - odysee
-  - rumble
-  - 9gag
-  - imgur
-  - deviantart
-  - pixiv
-  - stackexchange
-  - github
-  - gitlab
-  - arxiv
-  - pubmed
-  - crossref
-  - openalex
+# Engine configuration
+engines:
+  # Keep only these engines (all others disabled)
+  keep_only:
+    - google
+    - duckduckgo
+    - bing
+    - wikipedia
+    - wikidata
+    - nvd
+    - github_code
+    - hackernews
+    - privacywall
+    - sourcehut
+    - gitea
+    - reuters
+    - tagesschau
 
 ui:
   default_theme: simple
