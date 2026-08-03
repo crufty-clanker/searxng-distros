@@ -166,3 +166,99 @@ jobs:
       - name: Cleanup
         if: always()
         run: rm -f /tmp/${{ matrix.distro }}.tar
+
+  test-run:
+    needs:
+      - discover
+      - build
+    if: >-
+      github.event_name != 'workflow_dispatch' ||
+      github.event.inputs.step == 'test' ||
+      github.event.inputs.step == 'all'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        distro: ${{ fromJSON(needs.discover.outputs.distros) }}
+
+    name: "test-run: ${{ matrix.distro }}"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Download image
+        uses: actions/download-artifact@v8
+        with:
+          name: "${{ matrix.distro }}-image"
+          path: /tmp/
+
+      - name: Run container and check logs
+        id: run
+        run: |
+          CONTAINER=$(buildah from "oci-archive:/tmp/${{ matrix.distro }}.tar")
+          
+          # Run SearXNG in background and capture output
+          buildah run --isolation chroot "$CONTAINER" \
+            sh -c "python -m searx.webapp > /tmp/searx.log 2>&1 &"
+          
+          # Wait for server to be ready
+          for i in $(seq 1 30); do
+            HTTP_STATUS=$(curl --silent --write-out '%{http_code}' --output /dev/null \
+              http://localhost:8080/health 2>/dev/null) || true
+            if [ "$HTTP_STATUS" = "200" ]; then
+              echo "Server is ready (HTTP $HTTP_STATUS)"
+              break
+            fi
+            echo "Attempt $i: HTTP $HTTP_STATUS — retrying in 2s..."
+            sleep 2
+          done
+          
+          # Check health one more time
+          FINAL_STATUS=$(curl --silent --write-out '%{http_code}' --output /dev/null \
+            http://localhost:8080/health)
+          if [ "$FINAL_STATUS" != "200" ]; then
+            echo "ERROR: Server failed to start"
+            exit 1
+          fi
+          
+          # Save logs
+          cp /tmp/searx.log /tmp/searx-logs.txt
+          
+          # Stop the container
+          buildah rm "$CONTAINER"
+          
+          echo "container_id=$CONTAINER" >> "$GITHUB_OUTPUT"
+
+      - name: Check logs for errors
+        if: always()
+        run: |
+          if [ -f /tmp/searx-logs.txt ]; then
+            echo "=== SearXNG Logs ==="
+            cat /tmp/searx-logs.txt
+            
+            # Check for common error patterns
+            if grep -qi "error\|exception\|traceback\|fatal\|crash" /tmp/searx-logs.txt; then
+              echo ""
+              echo "❌ ERROR: Found error patterns in logs"
+              grep -i "error\|exception\|traceback\|fatal\|crash" /tmp/searx-logs.txt | head -20
+              exit 1
+            else
+              echo ""
+              echo "✅ No error patterns found in logs"
+            fi
+          else
+            echo "No logs file found"
+          fi
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: "${{ matrix.distro }}-logs"
+          path: /tmp/searx-logs.txt
+          retention-days: 5
+
+      - name: Cleanup
+        if: always()
+        run: rm -f /tmp/${{ matrix.distro }}.tar /tmp/searx-logs.txt
