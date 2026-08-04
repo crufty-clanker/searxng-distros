@@ -158,6 +158,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      - name: Install podman
+        run: sudo apt-get update && sudo apt-get install -y podman
+
       - name: Download image
         uses: actions/download-artifact@v8
         with:
@@ -175,9 +178,10 @@ jobs:
 
       - name: Test container health
         run: |
-          CONTAINER=$(buildah from "oci-archive:/tmp/${{ matrix.distro }}.tar:latest")
-          buildah run --isolation chroot "$CONTAINER" \
-            sh -c "python -m searx.webapp &"
+          podman run --detach --name test-container \
+            --network host \
+            "oci-archive:/tmp/${{ matrix.distro }}.tar:latest" \
+            python -m searx.webapp
           # Wait for server to be ready with proper status code check
           for i in $(seq 1 30); do
             HTTP_STATUS=$(curl --silent --write-out '%{http_code}' --output /dev/null \
@@ -200,7 +204,9 @@ jobs:
 
       - name: Cleanup
         if: always()
-        run: rm -f /tmp/${{ matrix.distro }}.tar
+        run: |
+          rm -f /tmp/${{ matrix.distro }}.tar
+          podman rm -f test-container 2>/dev/null || true
 
   test-run:
     needs:
@@ -222,6 +228,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      - name: Install podman
+        run: sudo apt-get update && sudo apt-get install -y podman
+
       - name: Download image
         uses: actions/download-artifact@v8
         with:
@@ -240,10 +249,10 @@ jobs:
       - name: Run container and check logs
         id: run
         run: |
-          CONTAINER=$(buildah from "oci-archive:/tmp/${{ matrix.distro }}.tar:latest")
-          
           # Run SearXNG in background and capture output
-          buildah run --isolation chroot "$CONTAINER" \
+          podman run --detach --name test-container \
+            --network host \
+            "oci-archive:/tmp/${{ matrix.distro }}.tar:latest" \
             sh -c "python -m searx.webapp > /tmp/searx.log 2>&1 &"
           
           # Wait for server to be ready
@@ -270,7 +279,7 @@ jobs:
           cp /tmp/searx.log /tmp/searx-logs.txt
           
           # Stop the container
-          buildah rm "$CONTAINER"
+          podman rm -f test-container 2>/dev/null || true
           
           echo "container_id=$CONTAINER" >> "$GITHUB_OUTPUT"
 
