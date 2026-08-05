@@ -23,6 +23,9 @@ server:
   limiter: true
   image_proxy: false
 
+valkey:
+  url: "valkey://valkey:6379/0"
+
 # Engine configuration
 engines:
   # Keep only these engines (all others disabled)
