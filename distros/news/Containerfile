@@ -8,7 +8,3 @@ COPY limiter.toml /etc/searxng/limiter.toml
 LABEL org.opencontainers.image.source="https://github.com/searxng/searxng-distros"
 LABEL org.opencontainers.image.title="SearXNG for News"
 LABEL org.opencontainers.image.description="SearXNG pre-configured for news and fact-checking"
-
-EXPOSE 8080
-
-CMD ["python", "-m", "searx.webapp"]
