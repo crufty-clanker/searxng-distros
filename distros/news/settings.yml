@@ -3,7 +3,19 @@
 # Focus: News sources, fact-checking, multilingual support
 # Disabled: shopping, images, videos, social media, developer platforms
 
-use_default_settings: true
+use_default_settings:
+  engines:
+    keep_only:
+      - google_news
+      - bing_news
+      - reuters
+      - tagesschau
+      - ansa
+      - duckduckgo
+      - google
+      - bing
+      - wikipedia
+      - wikidata
 
 general:
   debug: false
@@ -30,21 +42,6 @@ brand:
   pwa_colors:
     background: "#7f1d1d"
     accent: "#fca5a5"
-
-# Engine configuration
-engines:
-  # Keep only these engines (all others disabled)
-  keep_only:
-    - google_news
-    - bing_news
-    - reuters
-    - tagesschau
-    - ansa
-    - duckduckgo
-    - google
-    - bing
-    - wikipedia
-    - wikidata
 
 ui:
   default_theme: simple

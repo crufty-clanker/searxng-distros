@@ -3,7 +3,20 @@
 # Focus: Scholar, arXiv, PubMed, DOI, academic journals
 # Disabled: shopping, images, videos, social media, general news
 
-use_default_settings: true
+use_default_settings:
+  engines:
+    keep_only:
+      - google_scholar
+      - arxiv
+      - pubmed
+      - crossref
+      - openalex
+      - semantic_scholar
+      - google
+      - duckduckgo
+      - bing
+      - wikipedia
+      - wikidata
 
 general:
   debug: false
@@ -30,22 +43,6 @@ brand:
   pwa_colors:
     background: "#1a365d"
     accent: "#e2e8f0"
-
-# Engine configuration
-engines:
-  # Keep only these engines (all others disabled)
-  keep_only:
-    - google_scholar
-    - arxiv
-    - pubmed
-    - crossref
-    - openalex
-    - semantic_scholar
-    - google
-    - duckduckgo
-    - bing
-    - wikipedia
-    - wikidata
 
 ui:
   default_theme: simple

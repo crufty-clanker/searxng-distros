@@ -3,7 +3,28 @@
 # Focus: Public data correlation, Shodan, Censys, geolocation
 # Disabled: shopping, videos, music, social media, developer platforms
 
-use_default_settings: true
+use_default_settings:
+  engines:
+    keep_only:
+      - google
+      - google_images
+      - duckduckgo
+      - bing
+      - wikipedia
+      - wikidata
+      - openstreetmap
+      - wikicommons
+      - giphy
+      - unsplash
+      - pexels
+      - flickr
+      - flickr_noapi
+      - deviantart
+      - pixiv
+      - youtube_api
+      - vimeo
+      - reuters
+      - tagesschau
 
 general:
   debug: false
@@ -30,30 +51,6 @@ brand:
   pwa_colors:
     background: "#164e63"
     accent: "#67e8f9"
-
-# Engine configuration
-engines:
-  # Keep only these engines (all others disabled)
-  keep_only:
-    - google
-    - google_images
-    - duckduckgo
-    - bing
-    - wikipedia
-    - wikidata
-    - openstreetmap
-    - wikicommons
-    - giphy
-    - unsplash
-    - pexels
-    - flickr
-    - flickr_noapi
-    - deviantart
-    - pixiv
-    - youtube_api
-    - vimeo
-    - reuters
-    - tagesschau
 
 ui:
   default_theme: simple

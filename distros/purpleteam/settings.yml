@@ -3,7 +3,22 @@
 # Focus: Security advisories, CVE, NVD, threat intelligence
 # Disabled: shopping, images, videos, music, social media, developer platforms
 
-use_default_settings: true
+use_default_settings:
+  engines:
+    keep_only:
+      - google
+      - duckduckgo
+      - bing
+      - wikipedia
+      - wikidata
+      - nvd
+      - github_code
+      - hackernews
+      - privacywall
+      - sourcehut
+      - gitea
+      - reuters
+      - tagesschau
 
 general:
   debug: false
@@ -30,24 +45,6 @@ brand:
   pwa_colors:
     background: "#4c1d95"
     accent: "#c4b5fd"
-
-# Engine configuration
-engines:
-  # Keep only these engines (all others disabled)
-  keep_only:
-    - google
-    - duckduckgo
-    - bing
-    - wikipedia
-    - wikidata
-    - nvd
-    - github_code
-    - hackernews
-    - privacywall
-    - sourcehut
-    - gitea
-    - reuters
-    - tagesschau
 
 ui:
   default_theme: simple
