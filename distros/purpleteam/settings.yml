@@ -43,8 +43,10 @@ valkey:
 
 brand:
   pwa_colors:
-    background: "#4c1d95"
-    accent: "#c4b5fd"
+    background_color_light: "#4c1d95"
+    theme_color_light: "#c4b5fd"
+    background_color_dark: "#1e1b4b"
+    theme_color_dark: "#a78bfa"
 
 ui:
   default_theme: simple
