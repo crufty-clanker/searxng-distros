@@ -20,7 +20,7 @@ server:
   port: 8080
   bind_address: "0.0.0.0"
   secret_key: "change-me-in-production"
-  limiter: true
+  limiter: false  # Requires Valkey database - disable if not available
   image_proxy: false
 
 # Engine configuration
