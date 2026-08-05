@@ -1,29 +1,32 @@
 # Rate limiter configuration for News distro
-# Higher limits for news consumption
+# Based on SearXNG default schema
+
+[botdetection]
+
+# Prefix for IP address matching
+ipv4_prefix = 32
+ipv6_prefix = 48
+
+trusted_proxies = [
+  '127.0.0.0/8',
+  '::1',
+]
 
 [botdetection.ip_limit]
+
+# Allow unlimited access in local network
+filter_link_local = false
+
+# Activate link_token method
 link_token = true
 
-[botdetection.ip_limit.list_ips]
-# No IP whitelisting by default
+[botdetection.ip_lists]
 
-[botdetection.ip_limit.query_limit]
-# 30 queries per 5 minutes per IP
-per_minute = 30
+block_ip = [
+]
 
-[botdetection.ip_limit.query_limit_in_between]
-# 15 queries per minute per IP
-per_minute = 15
+pass_ip = [
+]
 
-[botdetection.ip_limit.use_recaptcha]
-# Enable reCAPTCHA for suspicious IPs
-enabled = false
-
-[botdetection.ip_limit.reaptcha_path]
-# reCAPTCHA path (not used unless enabled)
-path = ""
-
-[botdetection.ip_limit.secret]
-# Secret key for rate limiting (change in production)
-key = "change-me-in-production"
-sign_key = "change-me-in-production"
+# Activate passlist of hardcoded IPs from the SearXNG organization
+pass_searxng_org = true
