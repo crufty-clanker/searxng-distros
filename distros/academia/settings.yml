@@ -26,6 +26,11 @@ server:
 valkey:
   url: "valkey://valkey:6379/0"
 
+brand:
+  pwa_colors:
+    background: "#1a365d"
+    accent: "#e2e8f0"
+
 # Engine configuration
 engines:
   # Keep only these engines (all others disabled)
