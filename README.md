@@ -109,4 +109,4 @@ buildah push oci-archive:/tmp/my-distro.tar docker://registry.example.com/my-dis
 
 ## License
 
-MIT — only the build scripts and CI config are in this repo.
+This project is licensed under the GNU Affero General Public License (AGPL-3.0). See [LICENSE](./LICENSE) for more details.
