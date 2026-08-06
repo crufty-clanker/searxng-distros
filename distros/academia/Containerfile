@@ -4,6 +4,7 @@ FROM searxng/searxng:latest
 
 COPY settings.yml /etc/searxng/settings.yml
 COPY limiter.toml /etc/searxng/limiter.toml
+COPY ../../themes/ /usr/searxng/searx/static/themes/
 
 LABEL org.opencontainers.image.source="https://github.com/searxng/searxng-distros"
 LABEL org.opencontainers.image.title="SearXNG for Academia"

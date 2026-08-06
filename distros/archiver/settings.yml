@@ -45,7 +45,7 @@ brand:
     theme_color_dark: "#fcd34d"
 
 ui:
-  default_theme: simple
+  default_theme: archiver
   default_locale: "en"
   infoboxes: true
   syntax_highlighting: false

@@ -1,0 +1,42 @@
+/* Archiver distro — Minimal, text-focused, fast */
+/* Starting point — expand as needed */
+
+:root {
+  --color-primary: #2d3436;
+  --color-accent: #636e72;
+  --color-bg: #ffffff;
+  --color-text: #1a1a1a;
+  --color-link: #0984e3;
+  --color-link-hover: #0769b5;
+  --color-border: #dfe6e9;
+  --font-sans: -apple-system, "Segoe UI", "Helvetica Neue", sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-text);
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+header {
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.results .result-title a {
+  color: var(--color-link);
+}
+
+.results .result-snippet {
+  line-height: 1.5;
+}
+
+footer {
+  border-top: 1px solid var(--color-border);
+  margin-top: 2rem;
+  padding-top: 1rem;
+}

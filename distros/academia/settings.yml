@@ -47,7 +47,7 @@ brand:
     theme_color_dark: "#93c5fd"
 
 ui:
-  default_theme: simple
+  default_theme: academia
   default_locale: "en"
   infoboxes: true
   syntax_highlighting: false

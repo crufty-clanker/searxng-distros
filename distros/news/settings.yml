@@ -46,7 +46,7 @@ brand:
     theme_color_dark: "#f87171"
 
 ui:
-  default_theme: simple
+  default_theme: news
   default_locale: "en"
   infoboxes: true
   syntax_highlighting: false

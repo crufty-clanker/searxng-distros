@@ -49,7 +49,7 @@ brand:
     theme_color_dark: "#a78bfa"
 
 ui:
-  default_theme: simple
+  default_theme: purpleteam
   default_locale: "en"
   infoboxes: true
   syntax_highlighting: true

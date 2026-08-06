@@ -1,0 +1,42 @@
+/* Academia distro — Scholarly, clean, low-distraction */
+/* Starting point — expand as needed */
+
+:root {
+  --color-primary: #1a365d;
+  --color-accent: #2b6cb0;
+  --color-bg: #f8f9fa;
+  --color-text: #2d3748;
+  --color-link: #2b6cb0;
+  --color-link-hover: #1a365d;
+  --color-border: #e2e8f0;
+  --font-serif: "Georgia", "Times New Roman", serif;
+}
+
+body {
+  font-family: var(--font-serif);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+header, nav {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.search-input {
+  border-radius: 4px;
+}
+
+.results .result-title a {
+  color: var(--color-link);
+  font-weight: 600;
+}
+
+.results .result-url {
+  color: #38a169;
+  font-size: 0.9em;
+}
+
+footer {
+  border-top: 1px solid var(--color-border);
+}

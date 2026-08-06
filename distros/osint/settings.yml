@@ -55,7 +55,7 @@ brand:
     theme_color_dark: "#22d3ee"
 
 ui:
-  default_theme: simple
+  default_theme: osint
   default_locale: "en"
   infoboxes: true
   syntax_highlighting: false

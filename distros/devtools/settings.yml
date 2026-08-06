@@ -47,7 +47,7 @@ brand:
     theme_color_dark: "#4ade80"
 
 ui:
-  default_theme: simple
+  default_theme: devtools
   default_locale: "en"
   infoboxes: true
   syntax_highlighting: true

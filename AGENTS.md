@@ -32,6 +32,9 @@ distros/<name>/
 ├── limiter.toml       # Rate limiting config
 └── README.md          # Distro documentation
 
+themes/<distro-name>/
+└── style.css          # Custom CSS theme for the distro
+
 .github/
 ├── workflows/
 │   ├── distros.yml              # CI: syntax → build → test
@@ -59,8 +62,11 @@ scripts/
 2. Add `Containerfile` (or `.buildah` file)
 3. Add configuration files (`settings.yml`, `limiter.toml`, etc.)
 4. Add `README.md` documenting the distro
-5. Run `./scripts/regenerate-dependabot.sh` to update dependabot config
-6. Commit everything
+5. Add `themes/<name>/style.css` for a custom theme (optional)
+6. Update `Containerfile` to `COPY themes/<name>/` into the image
+7. Set `ui.default_theme: <name>` in `settings.yml`
+8. Run `./scripts/regenerate-dependabot.sh` to update dependabot config
+9. Commit everything
 
 ## Validation
 
