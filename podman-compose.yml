@@ -1,0 +1,46 @@
+# Podman Compose file for {{distro_name}} SearXNG distro
+# Run with: podman compose up -d
+# Access at: http://localhost:8080
+#
+# Replace {{distro_name}} with your distro name (e.g. devtools, osint, purpleteam).
+
+name: searxng-${distro_name}
+
+services:
+  searxng-${distro_name}:
+    build:
+      context: .
+      dockerfile: ./Containerfile
+      args:
+          distro: "${distro_name}"
+    image: searxng-distros/${distro_name}:latest
+    container_name: searxng-${distro_name}
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./distros/${distro_name}/settings.yml:/etc/searxng/settings.yml
+      - ./distros/${distro_name}/limiter.toml:/etc/searxng/limiter.toml
+      - ${distro_name}-data:/var/cache/searxng/
+    depends_on:
+      - valkey
+    networks:
+      - searxng-net
+
+  valkey:
+    image: docker.io/valkey/valkey:9-alpine
+    container_name: searxng-valkey
+    restart: unless-stopped
+    command: valkey-server --save 30 1 --loglevel warning
+    volumes:
+      - valkey-data:/data/
+    networks:
+      - searxng-net
+
+volumes:
+  ${distro_name}-data:
+  valkey-data:
+
+networks:
+  searxng-net:
+    driver: bridge
