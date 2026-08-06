@@ -10,7 +10,9 @@ COPY distros/${distro}/settings.yml /etc/searxng/settings.yml
 COPY distros/${distro}/limiter.toml /etc/searxng/limiter.toml
 
 # --- Themes (copies themes/<distro>/ into the image) ---
-COPY themes/ /usr/searxng/searx/static/themes/
+COPY themes/static/ /usr/local/searxng/searx/static/themes/
+COPY themes/templates/ /usr/local/searxng/searx/templates/
+#COPY themes/ /usr/searxng/searx/static/themes/
 
 # --- Metadata ---
 LABEL org.opencontainers.image.source="https://github.com/crufty-clanker/searxng-distros"
