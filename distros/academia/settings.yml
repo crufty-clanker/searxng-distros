@@ -16,7 +16,7 @@ use_default_settings:
       - duckduckgo
       - bing
       - wikipedia
-      - wikidata
+#      - wikidata
 
 general:
   debug: false

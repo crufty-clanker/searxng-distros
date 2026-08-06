@@ -11,7 +11,7 @@ use_default_settings:
       - duckduckgo
       - bing
       - wikipedia
-      - wikidata
+#      - wikidata
       - openstreetmap
       - wikicommons
       - giphy

@@ -10,7 +10,7 @@ use_default_settings:
       - duckduckgo
       - bing
       - wikipedia
-      - wikidata
+#      - wikidata
       - nvd
       - github_code
       - hackernews

@@ -15,7 +15,7 @@ use_default_settings:
       - google
       - bing
       - wikipedia
-      - wikidata
+#      - wikidata
 
 general:
   debug: false
